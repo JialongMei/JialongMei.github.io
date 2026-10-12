@@ -2148,7 +2148,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const n = T().nodes[id];
     if (!n.layers) return null;
     const L = n.layers, M = MODELS[id] || [];
-    const gap = Math.max(34, Math.min(76, g.h * .36));
+    const gap = g.gap || Math.max(34, Math.min(76, g.h * .36));
     const ex = document.createElement('div');
     ex.className = 'explode flat' + (compact ? ' compact' : ' desk') + (instant ? ' instant' : '');
     ex.setAttribute('aria-hidden', 'true');
@@ -3145,9 +3145,34 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     if (TH.open) layoutTheater();
     document.querySelectorAll('#th-acts button').forEach((b, i) => b.setAttribute('aria-current', String(i === TH.act)));
   }
-  async function playActs(i) {
+  // opening shot: the system's exploded model fills the sheet before act I
+  async function prologue() {
+    const id = TH.sheet, n = T().nodes[id], area = document.getElementById('th-area');
+    document.getElementById('th-no').textContent = '';
+    document.getElementById('th-ttl').textContent = n.title.join(' ');
+    document.getElementById('th-cap').textContent = n.lede;
+    const hd = document.getElementById('th-hdr');
+    hd.classList.remove('swap'); void hd.offsetWidth; hd.classList.add('swap');
+    document.querySelectorAll('#th-acts button').forEach(b => b.setAttribute('aria-current', 'false'));
+    layoutTheater();
+    // size the model by the sheet height: the layers stack upward from the base
+    const r = area.getBoundingClientRect(), nl = n.layers.length, w = Math.min(440, r.width * .4, r.height * .62);
+    const gap = Math.max(34, Math.min(76, r.height * .5 / nl));
+    const ex = buildExplode(id, area, { cx: r.width * .6, cy: r.height * .64, w, h: w * .62, k: 1, gap }, false, !motionOK());
+    if (!ex) return;
+    openExplode(ex, !motionOK());
+    try { await sleep(motionOK() ? 4600 : 2200); }
+    finally { ex.classList.add('gone'); setTimeout(() => ex.remove(), 400); }
+    await sleep(350);
+  }
+  async function playActs(i, opening = false) {
     thAbort();
     const run = TH.run;
+    if (opening) {
+      clearWorld();
+      try { await prologue(); } catch (e) { if (e instanceof Abort) return; throw e; }
+      if (run !== TH.run) return;
+    }
     for (;;) {
       TH.act = i;
       renderActHead();
@@ -3192,7 +3217,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     if (TH.open) {
       TH.sheet = id; thAbort(); clearWorld();
       if (TH.vault) { TH.vault.el.remove(); TH.vault = null; }
-      renderTheaterText(); thPlay(); playActs(0);
+      renderTheaterText(); thPlay(); playActs(0, true);
       return;
     }
     TH.sheet = id;
@@ -3206,7 +3231,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const tickLive = () => { clk.textContent = new Date().toLocaleTimeString('en-GB'); };
     tickLive(); clearInterval(liveTimer); liveTimer = setInterval(tickLive, 1000);
     thPlay();
-    playActs(0);
+    playActs(0, true);
     setTimeout(() => document.getElementById('th-close').focus({ preventScroll: true }), 400);
   }
   function hideTheater() {
