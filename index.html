@@ -154,20 +154,30 @@ button { font: inherit; color: inherit; }
   transition: width .55s cubic-bezier(.2, .8, .2, 1), height .55s cubic-bezier(.2, .8, .2, 1), opacity .4s ease;
   animation: curl-breathe 7s ease-in-out 5s infinite; -webkit-tap-highlight-color: transparent;
 }
-.curl:hover, .curl:focus-visible { width: 172px; height: 172px; outline: none; animation: none; }
+.curl:focus-visible { width: 172px; height: 172px; outline: none; animation: none; }
+@media (hover: hover) and (pointer: fine) { .curl:hover { width: 172px; height: 172px; animation: none; } }
 .curl.turning { opacity: 0; transition: none; }
-.curl-under { position: absolute; inset: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); background: linear-gradient(to top right, var(--paper) 0 30%, color-mix(in srgb, var(--ink) 22%, var(--paper)) 50%); }
-.curl-flap { position: absolute; inset: 0; filter: drop-shadow(2px -2px 2px var(--shadow)) drop-shadow(6px -6px 10px var(--shadow)); }
+.curl-under { position: absolute; inset: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); background: linear-gradient(to top right, var(--paper) 0 36%, color-mix(in srgb, #000 9%, var(--paper)) 50%); }
+.curl-flap { position: absolute; inset: 0; filter: drop-shadow(1px -1px 1.5px var(--shadow)); }
 .curl-flap::before {
   content: ""; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 100% 100%);
-  background: linear-gradient(to top right, color-mix(in srgb, var(--ink) 18%, var(--paper-2)) 50%, var(--paper) 63%, var(--paper-2) 100%);
+  /* the back of the sheet: flat paper, only slightly darker at the crease */
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, var(--ink) 30%, transparent) 0 1px, transparent 1px),
+    linear-gradient(to left, color-mix(in srgb, var(--ink) 30%, transparent) 0 1px, transparent 1px),
+    linear-gradient(to top right, color-mix(in srgb, #000 14%, var(--paper-2)) 50%, color-mix(in srgb, #000 4%, var(--paper-2)) 55%, var(--paper-2) 80%);
 }
 .curl-label { position: absolute; left: 6px; bottom: 6px; text-align: left; color: var(--signal); font-family: var(--cond); font-weight: 600; font-size: 11px; letter-spacing: .06em; line-height: 1; transition: font-size .5s cubic-bezier(.2, .8, .2, 1), left .5s ease, bottom .5s ease; }
 .curl-label small { display: block; font-family: var(--cond); font-weight: 600; font-size: 15px; letter-spacing: .08em; color: var(--signal); letter-spacing: 0; color: var(--ink-3); margin-top: 6px; white-space: nowrap; opacity: 0; transform: translateY(4px); transition: opacity .3s ease .15s, transform .3s ease .15s; }
-.curl:hover .curl-label, .curl:focus-visible .curl-label { left: 11px; bottom: 10px; }
+.curl:focus-visible .curl-label { left: 11px; bottom: 10px; }
 .curl-label svg { display: block; width: 20px; height: 20px; fill: var(--signal); transition: width .5s cubic-bezier(.2, .8, .2, 1), height .5s cubic-bezier(.2, .8, .2, 1); }
-.curl:hover .curl-label svg, .curl:focus-visible .curl-label svg { width: 46px; height: 46px; }
-.curl:hover .curl-label small, .curl:focus-visible .curl-label small { opacity: 1; transform: none; }
+.curl:focus-visible .curl-label svg { width: 46px; height: 46px; }
+.curl:focus-visible .curl-label small { opacity: 1; transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  .curl:hover .curl-label { left: 11px; bottom: 10px; }
+  .curl:hover .curl-label svg { width: 46px; height: 46px; }
+  .curl:hover .curl-label small { opacity: 1; transform: none; }
+}
 .curl:focus-visible .curl-flap::before { outline: 2px solid var(--signal); }
 @keyframes curl-breathe { 0%, 88%, 100% { width: 58px; height: 58px; } 93% { width: 78px; height: 78px; } }
 #page-flap { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 30; view-transition-name: page-flap; }
@@ -696,10 +706,14 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 .th-pane.has-ctx .th-ctx-k { display: none; }
 .th-pane.has-ctx .th-ctx i { width: 44px; }
 .th-role { min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--ink-3); font-family: var(--mono); font-size: 12px; letter-spacing: 0; text-transform: none; }
-.th-st { margin-left: auto; font-family: var(--mono); font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+.th-st { margin-left: auto; min-width: 7ch; flex: none; text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--ink-3); }
 .th-pane.lit .th-st { color: var(--signal); }
 .th-body { flex: 1; overflow: hidden; padding: 7px 10px; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
 .th-body .l { min-height: 1.55em; }
+.pbar { display: inline-block; position: relative; width: 9em; height: .62em; border: 1px solid var(--ink-3); vertical-align: -.02em; }
+.pbar b { position: absolute; left: 0; top: 0; bottom: 0; background: var(--signal); }
+.pcount { display: inline-block; text-align: right; font-variant-numeric: tabular-nums; }
+.pane-body .l, .th-body .l { white-space: pre-wrap; }
 .th-body .pre, .th-body .dim, .th-body .l.dim { color: var(--ink-3); }
 .th-body .l.ok .pre, .th-body .bar { color: var(--signal); }
 .th-body .l.bad { color: var(--signal); font-weight: 600; }
@@ -713,7 +727,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 .th-ctx i { position: relative; display: block; width: 56px; height: 7px; border: 1px solid var(--ink); }
 .th-ctx i b { position: absolute; left: 0; top: 0; bottom: 0; background: var(--ink); }
 .th-ctx i::after { content: ""; position: absolute; left: 40%; top: -4px; bottom: -4px; border-left: 1.5px solid var(--signal); }
-.th-ctx em { font-style: normal; min-width: 3ch; }
+.th-ctx em { font-style: normal; min-width: 4ch; text-align: right; font-variant-numeric: tabular-nums; }
 .th-ctx.hot i b { background: var(--signal); }
 .th-ctx.hot em { color: var(--signal); font-weight: 500; }
 
@@ -2233,6 +2247,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     return { ev, busy, dur: at, end: at + rnd(2200, 4200), tokens: ev.filter(e => e.type === 'token'), stamp: ev.find(e => e.type === 'stamp') };
   }
 
+  // fixed-length bar and a counter as wide as its final value, so nothing shifts while it fills
+  const progressHTML = (f, done, n) => `<span class="pbar"><b style="width:${(f * 100).toFixed(1)}%"></b></span> <span class="dim pcount" style="width:${String(n).length * 2 + 1}ch">${done}/${n}</span>`;
   function paneLines(run, pane, t) {
     const out = [];
     for (const e of run.ev) {
@@ -2251,9 +2267,9 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       } else if (e.type === 'think') {
         if (dt < e.dur) out.push(`<span class="ok">${SPIN[Math.floor(t / 80) % SPIN.length]}</span> <span class="dim">thinking${'.'.repeat(1 + Math.floor(dt / 400) % 3)}</span>`);
       } else if (e.type === 'tests') {
-        const f = Math.min(1, dt / e.dur), n = 14, k = Math.round(f * n);
+        const f = Math.min(1, dt / e.dur);
         out.push(f < 1
-          ? `tests <span class="ok">${'█'.repeat(k)}</span><span class="dim">${'░'.repeat(n - k)}</span> <span class="dim">${Math.floor(f * e.n)}/${e.n}</span>`
+          ? `tests ${progressHTML(f, Math.floor(f * e.n), e.n)}`
           : `<span class="ok">✓</span> ${e.n} passed <span class="dim">in ${e.secs}s</span>`);
       }
     }
@@ -2721,10 +2737,10 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const d = document.createElement('div'); d.className = 'l';
     p.body.appendChild(d); p.body.scrollTop = p.body.scrollHeight;
     busy(p, true);
-    const t0 = TH.t, N = 14;
+    const t0 = TH.t;
     const upd = t => {
-      const f = Math.min(1, (t - t0) / ms), k = Math.round(f * N);
-      d.innerHTML = `${esc(label)} <span class="bar">${'█'.repeat(k)}</span><span class="dim">${'░'.repeat(N - k)} ${Math.floor(f * n)}/${n}</span>`;
+      const f = Math.min(1, (t - t0) / ms);
+      d.innerHTML = `${esc(label)} ${progressHTML(f, Math.floor(f * n), n)}`;
     };
     TH.frame.add(upd); upd(TH.t);
     try { await sleep(ms); } finally { TH.frame.delete(upd); }
@@ -3648,7 +3664,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     flap.setAttribute('viewBox', `0 0 ${W} ${H}`);
     flap.setAttribute('aria-hidden', 'true');
     flap.innerHTML = `<defs>
-      <linearGradient id="pf-back" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${c('--ink')}" stop-opacity=".3"/><stop offset=".07" stop-color="${c('--paper-2')}"/><stop offset=".5" stop-color="${c('--paper')}"/><stop offset="1" stop-color="${c('--paper-2')}"/></linearGradient>
+      <linearGradient id="pf-back" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${c('--ink')}" stop-opacity=".16"/><stop offset=".06" stop-color="${c('--paper-2')}"/><stop offset="1" stop-color="${c('--paper-2')}"/></linearGradient>
       <linearGradient id="pf-cast" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient></defs>
       <polygon class="pf-cast" fill="url(#pf-cast)"/><polygon class="pf-back" fill="url(#pf-back)" stroke="${c('--ink')}" stroke-opacity=".25" stroke-width=".8"/>`;
     const back = flap.querySelector('.pf-back'), cast = flap.querySelector('.pf-cast');
