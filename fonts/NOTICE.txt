@@ -1,0 +1,4 @@
+osifont-lgpl3fe.woff — osifont, ISO 3098 lettering for technical drawings.
+Source: https://github.com/hikikomori82/osifont
+Licence: GNU LGPL version 3 with GPL font exception (as stated in the upstream README).
+Used unmodified.
