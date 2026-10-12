@@ -875,7 +875,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 <article class="textmode" id="textmode"></article>
 
 <noscript>
-  <p style="max-width:720px;margin:40px auto;font:17px/1.5 Georgia,serif;padding:0 20px">Jialong Mei, backend and applied AI engineer in Amsterdam. <a href="mailto:JialongM@outlook.com">JialongM@outlook.com</a> · <a href="https://www.linkedin.com/in/jialong-mei">LinkedIn</a> · <a href="https://github.com/JialongMei">GitHub</a> · <a href="cv.pdf">CV (PDF)</a></p>
+  <p style="max-width:720px;margin:40px auto;font:17px/1.5 Georgia,serif;padding:0 20px">Jialong Mei, backend and applied AI engineer in Amsterdam. <a href="mailto:JialongM@outlook.com">JialongM@outlook.com</a> · <a href="https://www.linkedin.com/in/jialong-mei-38b93a27b/">LinkedIn</a> · <a href="https://github.com/JialongMei">GitHub</a> · <a href="cv.pdf">CV (PDF)</a></p>
 </noscript>
 
 <script>
@@ -890,7 +890,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 
   /* ================= content ================= */
   const LINKS = {
-    linkedin: 'https://www.linkedin.com/in/jialong-mei',
+    linkedin: 'https://www.linkedin.com/in/jialong-mei-38b93a27b/',
     github: 'https://github.com/JialongMei',
     email: 'mailto:JialongM@outlook.com'
   };
@@ -1743,7 +1743,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       `<div class="tm-head"><div class="tm-top"><div><h1 tabindex="-1">Jialong Mei</h1><p class="role">${esc(t.role)} · ${esc(t.tb.locVal)}</p></div>
         <div class="tm-controls">${segHTML(t.ctl.view, 'data-view', [['drawing', t.ctl.drawing], ['text', t.ctl.text]], 'text')}
         ${segHTML(t.ctl.sheet, 'data-theme-set', [['paper', t.ctl.paper], ['blueprint', t.ctl.blueprint]], theme())}</div></div>
-        <p class="contact"><a href="mailto:JialongM@outlook.com">JialongM@outlook.com</a><a href="${LINKS.linkedin}">linkedin.com/in/jialong-mei</a><a href="${LINKS.github}">github.com/JialongMei</a>${PRINT ? '' : `<a href="${cvHref()}" download>${esc(x.pdf)}</a>`}</p></div>
+        <p class="contact"><a href="mailto:JialongM@outlook.com">JialongM@outlook.com</a><a href="${LINKS.linkedin}">linkedin.com/in/jialong-mei-38b93a27b</a><a href="${LINKS.github}">github.com/JialongMei</a>${PRINT ? '' : `<a href="${cvHref()}" download>${esc(x.pdf)}</a>`}</p></div>
        <h2>${esc(x.expH)}</h2>${x.exp.map(([r, o, m]) => `<section class="entry"><h3>${esc(r)} · ${esc(o)}</h3><p class="meta">${esc(m)}</p></section>`).join('')}
        <h2>${esc(x.workH)}</h2>${work}
        <h2>${esc(x.eduH)}</h2>${x.edu.map(([d, sc, m, th, url]) => `<section class="entry"><h3>${esc(d)} · ${esc(sc)}</h3><p class="meta">${esc(m)}</p>${th ? `<p>${esc(th)}${url ? (PRINT ? ` <span class="meta">${esc(url.replace('https://', ''))}</span>` : ` <a href="${url}">${esc(t.panel.code)}</a>`) : ''}</p>` : ''}</section>`).join('')}
