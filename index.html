@@ -10,7 +10,7 @@
 <meta property="og:description" content="Production LegalTech systems, OCR and LLM pipelines, and an MSc thesis on CI/CD energy use. Amsterdam.">
 <link rel="canonical" href="https://jialongmei.github.io/">
 <meta property="og:url" content="https://jialongmei.github.io/">
-<meta property="og:image" content="https://jialongmei.github.io/og-blueprint.png">
+<meta property="og:image" content="https://jialongmei.github.io/og-sheet.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -155,10 +155,10 @@ button { font: inherit; color: inherit; }
 .curl {
   position: fixed; left: 0; bottom: 0; z-index: 6; width: 58px; height: 58px; padding: 0; border: 0; background: none; cursor: pointer;
   transition: width .55s cubic-bezier(.2, .8, .2, 1), height .55s cubic-bezier(.2, .8, .2, 1), opacity .4s ease;
-  animation: curl-breathe 7s ease-in-out 5s infinite; -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-.curl:focus-visible { width: 172px; height: 172px; outline: none; animation: none; }
-@media (hover: hover) and (pointer: fine) { .curl:hover { width: 172px; height: 172px; animation: none; } }
+.curl:focus-visible { width: 172px; height: 172px; outline: none; }
+@media (hover: hover) and (pointer: fine) { .curl:hover { width: 172px; height: 172px; } }
 .curl.turning { opacity: 0; transition: none; }
 .curl-under { position: absolute; inset: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); background: linear-gradient(to top right, var(--paper) 0 36%, color-mix(in srgb, #000 9%, var(--paper)) 50%); }
 .curl-flap { position: absolute; inset: 0; filter: drop-shadow(1px -1px 1.5px var(--shadow)); }
@@ -182,7 +182,6 @@ button { font: inherit; color: inherit; }
   .curl:hover .curl-label small { opacity: 1; transform: none; }
 }
 .curl:focus-visible .curl-flap::before { outline: 2px solid var(--signal); }
-@keyframes curl-breathe { 0%, 88%, 100% { width: 58px; height: 58px; } 93% { width: 78px; height: 78px; } }
 #page-flap { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 30; view-transition-name: page-flap; }
 #page-flap .pf-back { filter: drop-shadow(-5px 7px 9px rgba(0, 0, 0, .28)); }
 html.vt-turn::view-transition-old(root) { clip-path: var(--peel); z-index: 1; }
@@ -807,9 +806,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 .live-pane { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .live-bar { fill: var(--signal); transform-box: fill-box; transform-origin: left center; animation: typebar 1.3s steps(5) infinite; }
 @keyframes typebar { 0% { transform: scaleX(.1); } 70%, 100% { transform: scaleX(1); } }
-.live-ants, .live-bar { animation-play-state: paused; }
-.node[data-node="fleet"]:hover .live-bar, .node[data-node="fleet"]:focus-visible .live-bar { animation-duration: .45s; animation-play-state: running; }
-.node[data-node="fleet"]:hover .live-ants, .node[data-node="fleet"]:focus-visible .live-ants { animation-play-state: running; }
+.node[data-node="fleet"]:hover .live-bar, .node[data-node="fleet"]:focus-visible .live-bar { animation-duration: .45s; }
 .node[data-node="fleet"]:hover .live-ants, .node[data-node="fleet"]:focus-visible .live-ants { stroke-width: 2.4; }
 
 /* sign-off row: replaces rubber stamps with a ruled approval strip */
@@ -1316,14 +1313,14 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   const BASE = {
     w: 1600, h: 1000, inset: 24,
     nodes: {
-      ocr: [72, 232, 320, 140], assistants: [72, 540, 320, 140],
-      platform: [600, 350, 400, 150], fleet: [1150, 450, 330, 120],
-      quant: [1160, 290, 320, 112], ebep: [620, 640, 360, 120],
+      ocr: [72, 230, 320, 140], assistants: [72, 472, 320, 140],
+      platform: [580, 467, 400, 150], fleet: [1215, 482, 320, 120],
+      quant: [1215, 270, 320, 112], ebep: [600, 744, 340, 120],
       offduty: [72, 736, 440, 216]
     },
     lede: [660, 84],
     sub: [64, 162],
-    anchors: { e1: ['r', .5, 'l', .3], e2: ['r', .5, 'l', .75], e3: ['l', .55, 'r', .55], e4: ['t', .45, 'b', .45] }
+    anchors: { e1: ['r', .5, 't', .2], e2: ['r', .5, 'l', .5], e3: ['l', .5, 'r', .5], e4: ['t', .5, 'b', .5] }
   };
   const TALL = {
     w: 400, h: 1410, inset: 4,
@@ -1525,13 +1522,23 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     EDGES.forEach(e => {
       const [as, at, bs, bt, off] = L.anchors[e.id];
       const a = anchor(L.nodes[e.from], as, at), b = anchor(L.nodes[e.to], bs, bt);
+      // ends that face each other and nearly line up are drawn as one straight line, not a small jog
+      const ax = as === 't' || as === 'b';
+      if (ax === (bs === 't' || bs === 'b') && as !== bs && Math.abs(ax ? a[0] - b[0] : a[1] - b[1]) < 16) {
+        const m = ax ? (a[0] + b[0]) / 2 : (a[1] + b[1]) / 2;
+        if (ax) { a[0] = m; b[0] = m; } else { a[1] = m; b[1] = m; }
+      }
       const pts = routeEdge(a, as, b, bs, off);
       const p = el('path', { d: ptsToPath(pts), class: 'edge' + (e.dashed ? ' dashed' : ''), 'marker-end': `url(#head-${key})` }, eg);
       S(p, 3);
       const dots = [0, 1, 2].map(i => el('circle', { r: (key === 'wide' ? 3.6 : 3) - i * .8, class: 'packet', opacity: 0 }, eg));
       packets.push({ path: p, dots, len: 0, pos: rand() * 300, speed: e.dashed ? 55 : 95, svg, ends: [e.from, e.to] });
       if (L.labels && t.edges[e.id]) {
-        const mid = pts.length === 4 ? [(pts[1][0] + pts[2][0]) / 2, (pts[1][1] + pts[2][1]) / 2] : pts[1];
+        // label on the middle of the longest segment
+        const run = pts.filter((q, i) => i === 0 || i === pts.length - 1 ||
+          Math.abs((q[0] - pts[i - 1][0]) * (pts[i + 1][1] - q[1]) - (q[1] - pts[i - 1][1]) * (pts[i + 1][0] - q[0])) > .5);
+        let mid = run[0], best = -1;
+        for (let i = 1; i < run.length; i++) { const d = Math.hypot(run[i][0] - run[i - 1][0], run[i][1] - run[i - 1][1]); if (d > best) { best = d; mid = [(run[i][0] + run[i - 1][0]) / 2, (run[i][1] + run[i - 1][1]) / 2]; } }
         const lg = el('g', {}, eg);
         const label = t.edges[e.id];
         if (!label) return;
@@ -1605,9 +1612,6 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       text(bal, bx, by, '', String(m.no));
       reveals.push([lastStroke, bal]);
       g.addEventListener('click', () => openNode(id));
-      const heat = on => () => { hotNode = on ? id : (hotNode === id ? null : hotNode); kickPackets(); };
-      g.addEventListener('pointerenter', heat(true)); g.addEventListener('pointerleave', heat(false));
-      g.addEventListener('focus', heat(true)); g.addEventListener('blur', heat(false));
       g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openNode(id); } });
     });
 
@@ -1772,14 +1776,12 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   // motion follows the site's own on/off switch only; the OS reduced-motion setting does not turn it off
   const motionOK = () => motionPref !== 'off' && !document.hidden && !document.body.classList.contains('is-text') && !PRINT;
 
-  // the sheet is still once drawn; data moves only along the edges of the node under the pointer
-  let running = false, last = performance.now(), hotNode = null;
+  let running = false, last = performance.now();
   const hide = p => p.dots.forEach(d => d.setAttribute('opacity', 0));
   function tick(now) {
-    if (!motionOK() || intro || !hotNode) { running = false; packets.forEach(hide); return; }
+    if (!motionOK() || intro) { running = false; packets.forEach(hide); return; }
     const dt = Math.min(64, now - last) / 1000; last = now;
     for (const p of packets) {
-      if (!p.ends.includes(hotNode)) { hide(p); continue; }
       if (p.svg.getBoundingClientRect().width === 0) continue;
       if (!p.len) p.len = p.path.getTotalLength();
       p.pos = (p.pos + p.speed * dt) % (p.len + 60);
@@ -1794,7 +1796,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     }
     requestAnimationFrame(tick);
   }
-  function kickPackets() { if (motionOK() && !intro && hotNode && !running) { running = true; last = performance.now(); requestAnimationFrame(tick); } }
+  function kickPackets() { if (motionOK() && !intro && !running) { running = true; last = performance.now(); requestAnimationFrame(tick); } }
   function syncMotion() {
     const pressedOn = motionPref !== 'off';
     document.documentElement.classList.toggle('no-motion', !pressedOn);
