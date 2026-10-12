@@ -203,8 +203,10 @@ html.vt-turn::view-transition-new(root) { z-index: 0; }
 }
 .explode.open .ex-iso { --ax: 57deg; --az: -36deg; --sc: var(--k); --tx: var(--dx); --ty: var(--dy); animation: sway 11s ease-in-out 1.4s infinite alternate; }
 @keyframes sway { from { --sway: 0deg; } to { --sway: 10deg; } }
-.plate { position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(calc(var(--i) * 1px)) scaleZ(.02); transition: transform 1.1s cubic-bezier(.2, .85, .25, 1) calc(.45s + var(--i) * 90ms); }
-.explode.open .plate { transform: translateZ(calc(var(--i) * var(--gap))) scaleZ(1); }
+.plate { position: absolute; inset: 0; transform-style: preserve-3d; transform: translate3d(0, 0, calc(var(--i) * 1px)) scale3d(1, 1, 1) rotateZ(0deg) rotateX(0deg) scaleZ(.02); transition: transform 1.1s cubic-bezier(.2, .85, .25, 1) calc(.45s + var(--i) * 90ms); }
+.explode.open .plate { transform: var(--open); }
+.ex-orbit { position: absolute; border: 1px dashed var(--ink-3); border-radius: 50%; opacity: 0; transition: opacity .4s ease 1.1s; }
+.explode.open .ex-orbit { opacity: .9; }
 /* model primitives: a box is a top face plus the front and right walls that face the viewer */
 .explode { --ex-line: color-mix(in srgb, var(--ink) 32%, transparent); }
 .pp, .pw, .pp > i { position: absolute; }
@@ -248,7 +250,7 @@ html.vt-turn::view-transition-new(root) { z-index: 0; }
 .explode.open .ex-axis { opacity: .9; }
 .ex-caption { position: absolute; left: calc(64 * var(--u)); bottom: calc(52 * var(--u)); font-family: var(--mono); font-size: 12px; letter-spacing: .16em; color: var(--ink-3); opacity: 0; transition: opacity .4s ease 1.3s; }
 .explode.open .ex-caption { opacity: 1; }
-.explode.instant .ex-iso, .explode.instant .plate, .explode.instant .ex-shell, .explode.instant .ex-label, .explode.instant .ex-axis, .explode.instant .ex-caption { transition: none; }
+.explode.instant .ex-iso, .explode.instant .plate, .explode.instant .ex-shell, .explode.instant .ex-label, .explode.instant .ex-axis, .explode.instant .ex-orbit, .explode.instant .ex-caption { transition: none; }
 .compact .ex-labels { display: none; }
 .compact .pl-tag { display: block; position: absolute; left: 2px; bottom: 2px; padding: 0 3px; white-space: nowrap; font-family: var(--mono); font-size: 10.5px; line-height: 1.3; color: var(--ink); background: var(--paper); }
 .compact .pl-tag b { font-weight: 400; color: var(--signal); }
@@ -318,7 +320,11 @@ html:lang(zh) .hdr-lede, html:lang(zh) .panel .lede { font-style: normal; }
 .pen { pointer-events: none; }
 .pen circle { fill: none; stroke: var(--signal); stroke-width: 1.4; }
 .pen line { stroke: var(--signal); stroke-width: 1; }
-.pen .nib { fill: var(--signal); stroke: none; }
+.pen .nib { fill: var(--signal); stroke: none; transition: opacity .2s ease; }
+.pen circle:not(.nib) { transition: r .25s ease, stroke-dasharray .25s ease; }
+.pen.up .nib { opacity: 0; }
+.pen.up circle:not(.nib) { r: 11px; stroke-dasharray: 3 2.4; }
+.pen.parked { opacity: 0; transition: opacity .45s ease; }
 
 .guides { pointer-events: none; opacity: 0; transition: opacity .2s ease; }
 .guides.on { opacity: 1; }
@@ -453,6 +459,26 @@ html.vt-fade::view-transition-new(root) { animation: vt-in .35s ease both; }
 .cs-txt { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
 .cs-dim { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-3); }
 .cs-ms { font-family: var(--mono); font-size: 12px; fill: var(--signal); font-weight: 500; }
+.cs-cloud { fill: none; stroke: var(--signal); stroke-width: 1.2; }
+.cs-tri { fill: var(--paper); stroke: var(--signal); stroke-width: 1.2; }
+.cs-tri-t { font-family: var(--iso); font-size: 11px; fill: var(--signal); }
+.cs-note { font-size: 11px; }
+.change-sheet .rv-a, .change-sheet .rv-b, .change-sheet .rv-cloud { transition: opacity .35s ease; }
+.change-sheet[data-rev="a"] .rv-b, .change-sheet[data-rev="b"] .rv-a, .change-sheet:not([data-rev="ab"]) .rv-cloud { opacity: 0; }
+/* overlay: Rev A stays underneath as a faint dashed ghost */
+.change-sheet[data-rev="ab"] .rv-a { opacity: .5; }
+.change-sheet[data-rev="ab"] .rv-a .cs-box, .change-sheet[data-rev="ab"] .rv-a .cs-line { stroke: var(--ink-3); stroke-dasharray: .02 .015; }
+.change-sheet[data-rev="ab"] .rv-a text { fill: var(--ink-3); }
+.change-sheet.draw:not([data-rev="a"]) .rv-b .d, .change-sheet.draw[data-rev="ab"] .rv-cloud .d { stroke-dasharray: 1; animation: cs-draw 1.1s cubic-bezier(.4, 0, .2, 1) both; }
+.change-sheet.draw[data-rev="ab"] .rv-cloud .d { animation-delay: .9s; }
+.change-sheet.draw[data-rev="ab"] .rv-cloud text, .change-sheet.draw[data-rev="ab"] .rv-cloud .cs-tri { animation: cs-fade .4s ease 1.8s both; }
+@keyframes cs-fade { from { opacity: 0; } }
+@keyframes cs-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.rev-switch { display: flex; gap: 0; margin-top: 8px; }
+.rev-switch button { font-family: var(--iso); font-size: 12px; letter-spacing: .08em; background: var(--paper); color: var(--ink-2); border: 1px solid var(--ink); padding: 5px 12px; cursor: pointer; margin-left: -1px; }
+.rev-switch button:first-child { margin-left: 0; }
+.rev-switch button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.rev-switch button:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 
 .repo-link { margin: 18px 0 0; }
 .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
@@ -710,7 +736,9 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 .live-pane { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
 .live-bar { fill: var(--signal); transform-box: fill-box; transform-origin: left center; animation: typebar 1.3s steps(5) infinite; }
 @keyframes typebar { 0% { transform: scaleX(.1); } 70%, 100% { transform: scaleX(1); } }
-.node[data-node="fleet"]:hover .live-bar, .node[data-node="fleet"]:focus-visible .live-bar { animation-duration: .45s; }
+.live-ants, .live-bar { animation-play-state: paused; }
+.node[data-node="fleet"]:hover .live-bar, .node[data-node="fleet"]:focus-visible .live-bar { animation-duration: .45s; animation-play-state: running; }
+.node[data-node="fleet"]:hover .live-ants, .node[data-node="fleet"]:focus-visible .live-ants { animation-play-state: running; }
 .node[data-node="fleet"]:hover .live-ants, .node[data-node="fleet"]:focus-visible .live-ants { stroke-width: 2.4; }
 
 /* sign-off row: replaces rubber stamps with a ruled approval strip */
@@ -957,12 +985,19 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
         ['D', '2025–', 'Full-stack engineer · legal-tech company']
       ] },
       edges: { e1: 'extracted data', e2: 'tool calls', e3: 'builds · reviews' },
+      dims: {
+        platform: ['file URLs · 240 ms → 1 ms', 'no write locks'], ocr: ['each field → its evidence', 'unsure → a person'],
+        assistants: ['typed tool output', 'past cases'], fleet: ['spec → tests → review → 1 PR', 'no direct push'],
+        quant: ['only data known on its date', 'purged CV'], ebep: ['ephemeral envs · −60–67 % energy', '44 runs'],
+        offduty: ['12 photos · 3 places', 'Fuji 3,776 m']
+      },
       panel: { close: 'Close', kicker: n => `DETAIL ${n}`, repo: 'Repository', code: 'Code', play: 'Play', pause: 'Pause', done: 'done', accepted: 'Accepted', timeline: 'Timeline', exploded: 'EXPLODED VIEW', design: 'Design', numbers: 'Numbers', tradeoffs: 'Trade-offs', workflow: 'Workflow', photos: 'Photos', contact: 'Contact', replay: 'Replay', replayNote: 'Illustrative script, not a recorded session.', panes: ['Planner', 'Worker · worktree', 'Reviewer'], idle: 'idle', busy: 'working' },
       sheetCS: {
         title: 'ECN-01 · FILE-URL GENERATION', scope: 'MEASURED ON STAGING', before: 'BEFORE', after: 'AFTER',
         thread: i => `thread ${i}`, fresh: ['new session', 'load model'], s3: 'S3 — presigned file URL',
         cache: ['process cache', 'session +', 'S3 resource', 'built once, locked'],
         footBefore: 'every request, every thread', footAfter: 'once per process',
+        revs: ['Rev A', 'Rev B', 'A + B'], note: '3 clients → 1 shared',
         aria: 'Before: each request thread created a new boto3 session and loaded the S3 service model, about 240 ms. After: all threads share one session and resource per process, built once under a lock, about 1 ms.'
       },
       nodes: {
@@ -1078,12 +1113,19 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
         ['D', '2025–', '全栈工程师 · 法律科技公司']
       ] },
       edges: { e1: '提取结果', e2: '工具调用', e3: '构建 · 评审' },
+      dims: {
+        platform: ['文件 URL · 240 ms → 1 ms', '部署不锁写入'], ocr: ['每个字段 → 页面证据', '不确定 → 转人工'],
+        assistants: ['带类型的工具输出', '过往案件'], fleet: ['规格 → 测试 → 评审 → 1 个 PR', '执行者不推送'],
+        quant: ['只用当日已知的数据', 'purged CV'], ebep: ['临时环境 · 能耗 −60–67 %', '44 次实验'],
+        offduty: ['12 张照片 · 3 处', '富士山 3,776 m']
+      },
       panel: { close: '关闭', kicker: n => `详图 ${n}`, repo: '代码仓库', code: '代码', play: '播放', pause: '暂停', done: '完成', accepted: '已接受', timeline: '时间轴', exploded: '分解视图', design: '设计', numbers: '数字', tradeoffs: '取舍', workflow: '工作流', photos: '照片', contact: '联系', replay: '重放', replayNote: '示意脚本，不是录制的真实会话。', panes: ['规划', '执行 · worktree', '评审'], idle: '空闲', busy: '工作中' },
       sheetCS: {
         title: 'ECN-01 · 文件 URL 生成', scope: 'STAGING 实测', before: '改前', after: '改后',
         thread: i => `线程 ${i}`, fresh: ['新建 session', '加载服务模型'], s3: 'S3 — 预签名文件 URL',
         cache: ['进程级缓存', 'session +', 'S3 resource', '加锁，只建一次'],
         footBefore: '每个请求、每个线程都要做', footAfter: '每个进程只做一次',
+        revs: ['修订 A', '修订 B', 'A + B 叠图'], note: '3 个 client → 1 个共享',
         aria: '改前：每个请求线程都新建 boto3 session 并加载 S3 服务模型，约 240 毫秒。改后：同一进程内所有线程共用一个 session 和 resource，加锁创建一次，约 1 毫秒。'
       },
       nodes: {
@@ -1281,19 +1323,20 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     return [el('path', { d, class: 'trail' }, g), el('path', { d: `M${cx} ${cy - 9} L${cx + 7} ${cy + 4} L${cx - 7} ${cy + 4} Z`, class: 'summit' }, g)];
   }
 
-  function dimension(g, x1, y1, x2, y2, label, key, vertical) {
+  function dimension(g, x1, y1, x2, y2, label, key, vertical, above) {
     const d = el('g', { class: 'dims' }, g);
     if (vertical) {
       el('path', { d: `M${x1 + 14} ${y1} H${x1 - 4} M${x1 + 14} ${y2} H${x1 - 4}`, class: 'dim-line' }, d);
       el('path', { d: `M${x1} ${y1 + 1} V${y2 - 1}`, class: 'dim-line', 'marker-start': `url(#dimhead-${key})`, 'marker-end': `url(#dimhead-${key})` }, d);
-      const my = (y1 + y2) / 2;
-      el('rect', { x: x1 - 15, y: my - 9, width: 30, height: 18, class: 'dim-bg' }, d);
-      text(d, x1, my + 1, 'dim-text', label);
+      const my = (y1 + y2) / 2, lw = textW(label, 12.5) + 12;
+      el('rect', { x: x1 - 9, y: my - lw / 2, width: 18, height: lw, class: 'dim-bg' }, d);
+      text(d, x1, my + 1, 'dim-text', label).setAttribute('transform', `rotate(-90 ${x1} ${my})`);
     } else {
-      el('path', { d: `M${x1} ${y1 - 14} V${y1 + 4} M${x2} ${y1 - 14} V${y1 + 4}`, class: 'dim-line' }, d);
+      const s = above ? -1 : 1;
+      el('path', { d: `M${x1} ${y1 - 14 * s} V${y1 + 4 * s} M${x2} ${y1 - 14 * s} V${y1 + 4 * s}`, class: 'dim-line' }, d);
       el('path', { d: `M${x1 + 1} ${y1} H${x2 - 1}`, class: 'dim-line', 'marker-start': `url(#dimhead-${key})`, 'marker-end': `url(#dimhead-${key})` }, d);
-      const mx = (x1 + x2) / 2;
-      el('rect', { x: mx - 18, y: y1 - 9, width: 36, height: 18, class: 'dim-bg' }, d);
+      const mx = (x1 + x2) / 2, lw = textW(label, 12.5) + 14;
+      el('rect', { x: mx - lw / 2, y: y1 - 9, width: lw, height: 18, class: 'dim-bg' }, d);
       text(d, mx, y1 + 1, 'dim-text', label);
     }
   }
@@ -1387,7 +1430,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       const p = el('path', { d: ptsToPath(pts), class: 'edge' + (e.dashed ? ' dashed' : ''), 'marker-end': `url(#head-${key})` }, eg);
       S(p, 3);
       const dots = [0, 1, 2].map(i => el('circle', { r: (key === 'wide' ? 3.6 : 3) - i * .8, class: 'packet', opacity: 0 }, eg));
-      packets.push({ path: p, dots, len: 0, pos: rand() * 300, speed: e.dashed ? 55 : 95, svg });
+      packets.push({ path: p, dots, len: 0, pos: rand() * 300, speed: e.dashed ? 55 : 95, svg, ends: [e.from, e.to] });
       if (L.labels && t.edges[e.id]) {
         const mid = pts.length === 4 ? [(pts[1][0] + pts[2][0]) / 2, (pts[1][1] + pts[2][1]) / 2] : pts[1];
         const lg = el('g', {}, eg);
@@ -1448,10 +1491,13 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
           }
           reveals.push([outline, lv]);
         }
-        if (L.dims) {
-          dimension(g, x, y + bh + 22, x + bw, y + bh + 22, String(bw), key, false);
-          dimension(g, x - 24, y, x - 24, y + bh, String(bh), key, true);
-        }
+      }
+      // dimensions state what the system achieves, not the size of the box
+      if (L.dims && t.dims[id]) {
+        // the off-duty sheet sits on the bottom border, so its dimension goes above it
+        const dy = m.offduty ? y - 22 : y + bh + 22;
+        dimension(g, x, dy, x + bw, dy, t.dims[id][0], key, false, m.offduty);
+        dimension(g, x - 24, y, x - 24, y + bh, t.dims[id][1], key, true);
       }
       const bx = x + bw + (key === 'wide' ? 26 : -4), by = y - (key === 'wide' ? 18 : 4);
       const bal = el('g', { class: 'balloon' }, g);
@@ -1460,6 +1506,9 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       text(bal, bx, by, '', String(m.no));
       reveals.push([lastStroke, bal]);
       g.addEventListener('click', () => openNode(id));
+      const heat = on => () => { hotNode = on ? id : (hotNode === id ? null : hotNode); kickPackets(); };
+      g.addEventListener('pointerenter', heat(true)); g.addEventListener('pointerleave', heat(false));
+      g.addEventListener('focus', heat(true)); g.addEventListener('blur', heat(false));
       g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openNode(id); } });
     });
 
@@ -1524,11 +1573,25 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     let finished = false;
     const t0 = performance.now();
     const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
-    const finish = () => {
+    // the pen lifts and travels, without drawing, to a park point in the margin outside the border
+    const park = () => {
+      const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(pen.getAttribute('transform') || '');
+      if (!m) { pen.remove(); return; }
+      const vb = svg.viewBox.baseVal, x0 = +m[1], y0 = +m[2], x1 = vb.width - 12, y1 = 12, p0 = performance.now();
+      pen.classList.add('up');
+      const step = now => {
+        const k = Math.min(1, (now - p0) / 900), e = ease(k);
+        pen.setAttribute('transform', `translate(${x0 + (x1 - x0) * e} ${y0 + (y1 - y0) * e})`);
+        if (k < 1) requestAnimationFrame(step);
+        else { pen.classList.add('parked'); setTimeout(() => pen.remove(), 500); }
+      };
+      requestAnimationFrame(step);
+    };
+    const finish = (lifted) => {
       if (finished) return; finished = true;
       strokes.forEach((s, j) => { finishStroke(j); s.style.strokeDasharray = saved[j]; s.style.strokeDashoffset = ''; });
       reveals.forEach(([, e]) => { e.classList.add('revealed'); e.classList.remove('pending'); });
-      pen.remove();
+      if (lifted === true) park(); else pen.remove();
       removeEventListener('pointerdown', finish); removeEventListener('keydown', finish);
       done();
     };
@@ -1545,7 +1608,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       strokes[i].style.strokeDashoffset = lens[i] - local;
       const pt = strokes[i].getPointAtLength(local);
       pen.setAttribute('transform', `translate(${pt.x} ${pt.y})`);
-      if (k >= 1) finish(); else requestAnimationFrame(frameFn);
+      if (k >= 1) finish(true); else requestAnimationFrame(frameFn);
     };
     requestAnimationFrame(frameFn);
   }
@@ -1610,11 +1673,14 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   // motion follows the site's own on/off switch only; the OS reduced-motion setting does not turn it off
   const motionOK = () => motionPref !== 'off' && !document.hidden && !document.body.classList.contains('is-text') && !PRINT;
 
-  let running = false, last = performance.now();
+  // the sheet is still once drawn; data moves only along the edges of the node under the pointer
+  let running = false, last = performance.now(), hotNode = null;
+  const hide = p => p.dots.forEach(d => d.setAttribute('opacity', 0));
   function tick(now) {
-    if (!motionOK() || intro) { running = false; packets.forEach(p => p.dots.forEach(d => d.setAttribute('opacity', 0))); return; }
+    if (!motionOK() || intro || !hotNode) { running = false; packets.forEach(hide); return; }
     const dt = Math.min(64, now - last) / 1000; last = now;
     for (const p of packets) {
+      if (!p.ends.includes(hotNode)) { hide(p); continue; }
       if (p.svg.getBoundingClientRect().width === 0) continue;
       if (!p.len) p.len = p.path.getTotalLength();
       p.pos = (p.pos + p.speed * dt) % (p.len + 60);
@@ -1629,11 +1695,12 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     }
     requestAnimationFrame(tick);
   }
+  function kickPackets() { if (motionOK() && !intro && hotNode && !running) { running = true; last = performance.now(); requestAnimationFrame(tick); } }
   function syncMotion() {
     const pressedOn = motionPref !== 'off';
     document.documentElement.classList.toggle('no-motion', !pressedOn);
     document.querySelectorAll('[data-motion-set]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.motionSet === 'on') === pressedOn)));
-    if (motionOK() && !intro && !running) { running = true; last = performance.now(); requestAnimationFrame(tick); }
+    kickPackets();
     if (fleet) { if (motionOK()) fleet.resume(); else fleet.suspend(); }
     if (TH.open) { if (document.hidden) thPause(); else thPlay(); }
   }
@@ -1799,32 +1866,55 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     return h;
   }
 
+  // Rev A and Rev B are drawn in register on one sheet: the visitor can view either one or both overlaid
   function changeSheetHTML() {
     const s = T().sheetCS;
-    const box = (x, y, w, h, lines, cls = '') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" class="cs-box ${cls}"/>` +
+    const box = (x, y, w, h, lines, cls = '') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" pathLength="1" class="cs-box d ${cls}"/>` +
       lines.map((tx, i) => `<text x="${x + 8}" y="${y + 17 + i * 14}" class="cs-txt${i ? ' cs-dim' : ''}">${esc(tx)}</text>`).join('');
-    const arrow = (x1, y1, x2, y2) => `<path d="M${x1} ${y1} L${x2} ${y2}" class="cs-line" marker-end="url(#cs-head)"/>`;
+    const arrow = (x1, y1, x2, y2) => `<path d="M${x1} ${y1} L${x2} ${y2}" pathLength="1" class="cs-line d" marker-end="url(#cs-head)"/>`;
     const ys = [62, 112, 162];
-    let before = '', after = '';
+    let common = '', a = '', b = '';
     ys.forEach((y, i) => {
-      before += box(10, y, 68, 34, [s.thread(i + 1)]) + arrow(78, y + 17, 92, y + 17) +
-        box(94, y, 98, 34, s.fresh, 'cs-hot') + (i === 1 ? `<text x="198" y="${y + 22}" class="cs-ms">~240 ms</text>` : '');
-      after += box(264, y, 68, 34, [s.thread(i + 1)]) + arrow(332, y + 17, 354, 116);
+      common += box(10, y, 68, 34, [s.thread(i + 1)]);
+      a += arrow(78, y + 17, 108, y + 17) + box(110, y, 98, 34, s.fresh, 'cs-hot');
+      b += arrow(78, y + 17, 328, y + 17);
     });
-    before += arrow(140, 196, 140, 220) + box(10, 222, 236, 30, [s.s3]);
-    after += box(356, 70, 134, 92, s.cache, 'cs-hot') + `<text x="423" y="182" class="cs-ms" text-anchor="middle">~1 ms</text>` +
-      arrow(423, 188, 423, 220) + box(264, 222, 226, 30, [s.s3]);
-    return `<figure class="change-sheet"><svg viewBox="0 0 500 300" role="img" aria-label="${esc(s.aria)}">
+    common += box(10, 222, 480, 30, [s.s3]);
+    a += `<text x="216" y="107" class="cs-ms">~240 ms</text>` + arrow(160, 196, 160, 220) +
+      `<text x="10" y="52" class="cs-tag">${esc(s.revs[0])} · ${esc(s.before)}</text><text x="10" y="288" class="cs-dim">${esc(s.footBefore)}</text>`;
+    b += box(330, 62, 160, 134, s.cache, 'cs-hot') + arrow(410, 196, 410, 220) + `<text x="418" y="213" class="cs-ms">~1 ms</text>` +
+      `<text x="330" y="52" class="cs-tag">${esc(s.revs[1])} · ${esc(s.after)}</text><text x="330" y="288" class="cs-dim">${esc(s.footAfter)}</text>`;
+    // revision cloud and triangle around the part that changed
+    const cloud = (x, y, w, h, r) => {
+      let d = `M${x} ${y}`; const arc = (tx, ty) => { d += ` A${r} ${r} 0 0 1 ${tx} ${ty}`; };
+      const nx = Math.round(w / (r * 1.6)), ny = Math.round(h / (r * 1.6));
+      for (let k = 1; k <= nx; k++) arc(x + w * k / nx, y);
+      for (let k = 1; k <= ny; k++) arc(x + w, y + h * k / ny);
+      for (let k = 1; k <= nx; k++) arc(x + w - w * k / nx, y + h);
+      for (let k = 1; k <= ny; k++) arc(x, y + h - h * k / ny);
+      return d + ' Z';
+    };
+    const rc = `<g class="rv-cloud"><path d="${cloud(324, 58, 170, 140, 9)}" pathLength="1" class="cs-cloud d"/>
+      <path d="M296 54 L307 36 L318 54 Z" class="cs-tri"/><text x="307" y="50" class="cs-tri-t" text-anchor="middle">B</text>
+      <text x="330" y="270" class="cs-ms cs-note">${esc(s.note)}</text></g>`;
+    const btn = (k, i) => `<button type="button" data-rev="${k}" aria-pressed="${k === 'ab'}">${esc(s.revs[i])}</button>`;
+    return `<figure class="change-sheet draw" data-rev="ab"><svg viewBox="0 0 500 300" role="img" aria-label="${esc(s.aria)}">
       <defs><marker id="cs-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1.5 L10 5 L0 8.5 Z" class="edge-head"/></marker></defs>
       <rect x="0.75" y="0.75" width="498.5" height="298.5" class="cs-frame"/>
       <text x="10" y="24" class="cs-title">${esc(s.title)}</text>
       <text x="490" y="24" class="cs-dim" text-anchor="end">${esc(s.scope)}</text>
-      <path d="M0 34 H500" class="cs-rule"/><path d="M254 34 V300" class="cs-rule dashed"/>
-      <text x="10" y="52" class="cs-tag">${esc(s.before)}</text><text x="264" y="52" class="cs-tag">${esc(s.after)}</text>
-      ${before}${after}
-      <text x="10" y="280" class="cs-dim">${esc(s.footBefore)}</text><text x="264" y="280" class="cs-dim">${esc(s.footAfter)}</text>
-    </svg></figure>`;
+      <path d="M0 34 H500" class="cs-rule"/>
+      <g class="rv-a">${a}</g><g class="rv-b">${b}</g>${common}${rc}
+    </svg><div class="rev-switch" role="group" aria-label="${esc(s.title)}">${['a', 'b', 'ab'].map((k, i) => btn(k, i)).join('')}</div></figure>`;
   }
+  document.addEventListener('click', e => {
+    const bt = e.target.closest('.rev-switch button');
+    if (!bt) return;
+    const f = bt.closest('.change-sheet');
+    f.dataset.rev = bt.dataset.rev;
+    f.querySelectorAll('.rev-switch button').forEach(x => x.setAttribute('aria-pressed', String(x === bt)));
+    f.classList.remove('draw'); void f.offsetWidth; f.classList.add('draw');
+  });
 
   /* ========== workflow replay: three agent panes that keep picking up new tasks ========== */
   // each run is timed afresh: commands are typed key by key, output streams in chunks, pauses vary
@@ -2103,7 +2193,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     ],
     fleet: [
       [SH(.3, .1, .4, .8, 2, .06, { t: 'ln' })],
-      [B(.16, .16, .08, 0, .3, { sq: 1 }), B(.16, .6, .08, 0, .3, { sq: 1 }), B(.76, .16, .08, 0, .3, { sq: 1, t: 'sg' }), B(.76, .6, .08, 0, .3, { sq: 1 }), CY(.5, .5, .2, .5, { t: 'h' })],
+      [CY(.5, .5, .2, .5, { t: 'h' }), B(.16, .16, .08, 0, .3, { sq: 1 }), B(.16, .6, .08, 0, .3, { sq: 1 }), B(.76, .16, .08, 0, .3, { sq: 1, t: 'sg' }), B(.76, .6, .08, 0, .3, { sq: 1 })],
       [B(.26, .1, .48, .8, .08, { svg: 'tests' })],
       [B(.3, .1, .4, .8, .04), B(.48, .12, .04, .12, .54), B(.48, .76, .04, .12, .54), B(.48, .12, .04, .76, .08, { z: .54, t: 'sg' })],
       [B(.1, .44, .36, .12, .07), B(.1, .44, .36, .12, .07, { rz: -24 }), B(.1, .44, .36, .12, .07, { rz: 24 }), B(.46, .41, .42, .18, .11, { t: 'sg' })]
@@ -2124,6 +2214,24 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     ]
   };
   const PLATE = [B(0, 0, 1, 1, .16, { t: 'h', no: 1 })];
+  /* explode direction per system: at(i) gives layer i's open offset [x, y, z] in px and [rotateZ, rotateX] in deg.
+     an optional sixth value scales world Z (the iso view's scale() is 2D, so standing layers need it).
+     fit scales the opened model, sx/sy shift it in units of its scaled footprint width/height */
+  const U = [Math.cos(.63), Math.sin(.63)], FRONT = [-U[1], U[0]];   // screen-right and toward-viewer directions on the sheet
+  const ORBIT = (W, gap, phi) => { const R = W * .55, t = .2; return [R * Math.cos(phi) * Math.cos(t), R * Math.sin(phi), gap * 2.3 + R * Math.cos(phi) * Math.sin(t)]; };
+  const LAYOUT = {
+    // the pipeline reads left to right: each layer stands up as a card facing the viewer and steps right
+    ocr: { fit: .5, sx: -.75, sy: .35, at: (i, W, H, gap, L, k) => { const s = i * W * .42, b = i * H * .3; return [s * U[0] - b * FRONT[0], s * U[1] - b * FRONT[1], (H / 2 + i * W * .27) * k, 36, -90, k]; } },
+    // a staircase that climbs back along the time axis
+    quant: { fit: .78, sx: -.38, sy: -.2, at: (i, W, H, gap) => [i * W * .24, 0, i * gap * .8, 0, 0] },
+    // a staircase that climbs to the left, from the cluster up to the datasets
+    ebep: { fit: .8, sx: .3, sy: -.1, at: (i, W, H, gap) => [-i * W * .2 * U[0], -i * W * .2 * U[1], i * gap * .9, 0, 0] },
+    // a gentle arc: the stack bows sideways and each layer tilts a little
+    assistants: { fit: 1, axis: 1, at: (i, W, H, gap, L) => [-W * .16 * Math.sin(Math.PI * i / (L - 1)), 0, i * gap * 1.1, 0, (i - (L - 1) / 2) * 7] },
+    // spec at the base, the worker hub on the spine, tests and review on a tilted orbit, the merged branch on top
+    fleet: { fit: .78, axis: 1, sy: -.1, orbit: 1, at: (i, W, H, gap) => [[0, 0, 0], [0, 0, gap], ORBIT(W, gap, 3), ORBIT(W, gap, .63), [0, 0, gap * 4]][i].concat(0, 0) }
+  };
+  const VERT = { fit: 1, axis: 1, at: (i, W, H, gap) => [0, 0, i * gap, 0, 0] };
   // returns the primitive's markup, its label anchor [x, y, z] and its top z, all in px of the footprint
   function prim(p, W, H, gap, i) {
     const x = p.x * W, y = p.y * H, w = p.w * W, h = p.sq ? w : p.h * H, d = p.d * gap, z = (p.z || 0) * gap;
@@ -2152,13 +2260,14 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const ex = document.createElement('div');
     ex.className = 'explode flat' + (compact ? ' compact' : ' desk') + (instant ? ' instant' : '');
     ex.setAttribute('aria-hidden', 'true');
-    const k = g.k || 1;
+    const lo = LAYOUT[id] || VERT, k = (g.k || 1) * lo.fit, fh = g.h * k;
     const plates = L.map((l, i) => {
+      const o = lo.at(i, g.w, g.h, gap, L.length, k);
       const ps = (M[i] || PLATE).map(p => prim(p, g.w, g.h, gap, i)), a = ps[0].a;
-      return `<div class="plate" style="--i:${i}">${ps.map(p => p.html).join('')}<i class="pl-anchor" style="left:${a[0]}px;top:${a[1]}px;transform:translateZ(${a[2]}px)"></i><span class="pl-tag" style="transform:translateZ(${Math.max(...ps.map(p => p.top)) + 1}px)"><b>${String(i + 1).padStart(2, '0')}</b> ${esc(l)}</span></div>`;
+      return `<div class="plate" style="--i:${i};--open:translate3d(${o[0]}px,${o[1]}px,${o[2]}px) scale3d(1,1,${o[5] || 1}) rotateZ(${o[3]}deg) rotateX(${o[4]}deg) scaleZ(1)">${ps.map(p => p.html).join('')}<i class="pl-anchor" style="left:${a[0]}px;top:${a[1]}px;transform:translateZ(${a[2]}px)"></i><span class="pl-tag" style="transform:translateZ(${Math.max(...ps.map(p => p.top)) + 1}px)"><b>${String(i + 1).padStart(2, '0')}</b> ${esc(l)}</span></div>`;
     }).join('');
-    ex.innerHTML = `<div class="ex-scene"><div class="ex-iso" style="left:${g.cx - g.w / 2}px;top:${g.cy - g.h / 2}px;width:${g.w}px;height:${g.h}px;--gap:${gap}px;--k:${k};--dx:${g.dx || 0}px;--dy:${g.dy || 0}px">
-      <div class="ex-axis" style="height:${gap * (L.length - 1) + 60}px"></div>${plates}<div class="ex-shell" style="transform:translateZ(${L.length + 1}px)"></div>
+    ex.innerHTML = `<div class="ex-scene"><div class="ex-iso" style="left:${g.cx - g.w / 2}px;top:${g.cy - g.h / 2}px;width:${g.w}px;height:${g.h}px;--gap:${gap}px;--k:${k};--dx:${(g.dx || 0) + (lo.sx || 0) * g.w * k}px;--dy:${(g.dy || 0) + (lo.sy || 0) * fh}px">
+      ${lo.axis ? `<div class="ex-axis" style="height:${gap * (L.length - 1) + 60}px"></div>` : ''}${lo.orbit ? `<div class="ex-orbit" style="left:${g.w / 2 - g.w * .6}px;top:${g.h / 2 - g.w * .6}px;width:${g.w * 1.2}px;height:${g.w * 1.2}px;transform:translateZ(${gap * 2.3}px) rotateY(-.2rad)"></div>` : ''}${plates}<div class="ex-shell" style="transform:translateZ(${L.length + 1}px)"></div>
       </div></div><div class="ex-labels">${L.map((l, i) => `<span class="ex-label" style="--i:${i}">${esc(l)}</span>`).join('')}</div><div class="ex-caption">${esc(T().panel.exploded)}</div>`;
     host.appendChild(ex);
     return ex;
@@ -2173,7 +2282,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       const sz = labels.map(lb => [lb.offsetWidth, lb.offsetHeight]);
       const col = Math.min(...pts.map(p => p[0])) - 44;
       let prev = -Infinity;
-      for (let i = labels.length - 1; i >= 0; i--) {
+      for (const i of pts.map((p, j) => j).sort((a, b) => pts[a][1] - pts[b][1])) {
         const [w, h] = sz[i], y = Math.max(pts[i][1], prev + h + 8, h / 2 + 8), left = Math.max(8, col - w);
         const dx = pts[i][0] - left - w, dy = pts[i][1] - y;
         prev = y;
@@ -3161,7 +3270,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const ex = buildExplode(id, area, { cx: r.width * .6, cy: r.height * .64, w, h: w * .62, k: 1, gap }, false, !motionOK());
     if (!ex) return;
     openExplode(ex, !motionOK());
-    try { await sleep(motionOK() ? 4600 : 2200); }
+    // the fleet sheet gets to its live demo 1.5 s sooner than the others
+    try { await sleep((motionOK() ? 4600 : 2200) - (id === 'fleet' ? 1500 : 0)); }
     finally { ex.classList.add('gone'); setTimeout(() => ex.remove(), 400); }
     await sleep(350);
   }
