@@ -98,6 +98,7 @@ button { font: inherit; color: inherit; }
 }
 .tb-cell { grid-column: span 4; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: .45em .7em .5em; min-width: 0; }
 .tb-cell.end { border-right: 0; }
+.sheet-end { display: none; }
 .tb-label { display: block; font-family: var(--iso); font-size: max(10px, .72em); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .2em; }
 .tb-mono { font-family: var(--iso); font-size: 1.05em; }
 .tb-num { grid-column: span 3; }
@@ -292,11 +293,15 @@ html:lang(zh) .hdr-lede, html:lang(zh) .panel .lede { font-style: normal; }
 .balloon circle { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; transition: fill .2s ease; }
 .balloon text { fill: var(--ink); font-family: var(--mono); font-size: 12px; text-anchor: middle; dominant-baseline: central; }
 .leader { stroke: var(--ink); stroke-width: .8; fill: none; }
+.detail-ring circle, .detail-ring path { fill: none; stroke: var(--signal); stroke-width: 1.1; stroke-dasharray: 1; animation: cs-draw .8s cubic-bezier(.4, 0, .2, 1) .15s both; }
+.detail-ring path { animation-delay: .8s; animation-duration: .3s; }
+.detail-ring-t { fill: var(--signal); font-family: var(--iso); font-size: 13px; letter-spacing: .1em; animation: cs-fade .3s ease 1s both; }
 .dims { opacity: 0; transition: opacity .25s ease; pointer-events: none; }
 .dim-line { stroke: var(--signal); stroke-width: .8; fill: none; }
 .dim-head { fill: var(--signal); }
 .dim-text { fill: var(--signal); font-family: var(--iso); font-size: 12.5px; text-anchor: middle; dominant-baseline: middle; }
 .dim-bg { fill: var(--paper); }
+.fold { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 2; }
 .node:hover .node-box, .node:focus-visible .node-box, .node.active .node-box { stroke-width: 2.6; }
 .node:hover .hatch-fill, .node:focus-visible .hatch-fill { opacity: .55; }
 .node:hover .balloon circle, .node:focus-visible .balloon circle, .node.active .balloon circle { fill: var(--signal); }
@@ -474,6 +479,45 @@ html.vt-fade::view-transition-new(root) { animation: vt-in .35s ease both; }
 .change-sheet.draw[data-rev="ab"] .rv-cloud text, .change-sheet.draw[data-rev="ab"] .rv-cloud .cs-tri { animation: cs-fade .4s ease 1.8s both; }
 @keyframes cs-fade { from { opacity: 0; } }
 @keyframes cs-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+/* figures in the detail panel */
+.fig { margin: 24px 0 0; }
+.fig svg, .places svg { display: block; width: 100%; height: auto; }
+.aq-p { fill: var(--paper); stroke: var(--ink); stroke-width: 1; transition: fill .2s ease, stroke .2s ease, opacity .2s ease; }
+.aq-l { stroke: var(--ink-3); stroke-width: 1; fill: none; }
+.aq-k { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.aq.use .aq-p { fill: var(--ink-3); }
+.aq.use .aq-k { fill: var(--ink); }
+.aq.trap .aq-p { stroke: var(--signal); stroke-width: 1.6; }
+.aq.trap .aq-l { stroke: var(--signal); stroke-dasharray: 3 2; }
+.aq.trap .aq-k { stroke: var(--signal); }
+.aq.fut { opacity: .4; }
+.aq-fog { opacity: .7; }
+.aq-cut-l { stroke: var(--signal); stroke-width: 1.6; }
+.aq-cut-t { font-family: var(--iso); font-size: 12px; fill: var(--signal); letter-spacing: .06em; }
+.aq-sw { stroke: var(--ink); stroke-width: .8; fill: var(--paper); }
+.aq-sw.use { fill: var(--ink-3); }
+.aq-sw.trap { stroke: var(--signal); stroke-width: 1.4; }
+.aq-trap-t { fill: var(--signal); }
+.aq-ctl { display: flex; align-items: center; gap: 12px; margin-top: 8px; font-family: var(--iso); font-size: 12px; letter-spacing: .08em; color: var(--ink-3); }
+.aq-range { flex: 1; accent-color: var(--signal); }
+.id-reg { stroke: var(--ink-3); stroke-width: .7; stroke-dasharray: 2 3; }
+.id-hatch { stroke: var(--signal); stroke-width: 1; }
+.id-idle { stroke: var(--signal); stroke-width: .8; }
+.id-work { fill: var(--grid-major); stroke: none; }
+.id-curve { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+.id-lead { stroke: var(--signal); stroke-width: 1; fill: none; }
+.id-lbl { font-size: 11px; }
+.fig .d { stroke-dasharray: 1; animation: cs-draw 1.4s cubic-bezier(.4, 0, .2, 1) .2s both; }
+.places { margin: 4px 0 14px; }
+.places svg { margin-top: 8px; }
+.sec { display: none; }
+.places[data-place="0"] .sec-0, .places[data-place="1"] .sec-1, .places[data-place="2"] .sec-2 { display: inline; }
+.photos[data-place="0"] figure:not([data-p="0"]), .photos[data-place="1"] figure:not([data-p="1"]), .photos[data-place="2"] figure:not([data-p="2"]) { display: none; }
+.sec-line { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.sec-cut { opacity: .55; }
+.places.draw .sec-line { stroke-dasharray: 1; animation: cs-draw 1.1s cubic-bezier(.4, 0, .2, 1) both; }
+.place-tabs button span { color: var(--signal); margin-left: .3em; }
+.place-tabs button[aria-pressed="true"] span { color: var(--paper); }
 .rev-switch { display: flex; gap: 0; margin-top: 8px; }
 .rev-switch button { font-family: var(--iso); font-size: 12px; letter-spacing: .08em; background: var(--paper); color: var(--ink-2); border: 1px solid var(--ink); padding: 5px 12px; cursor: pointer; margin-left: -1px; }
 .rev-switch button:first-child { margin-left: 0; }
@@ -509,6 +553,10 @@ body.is-text .textmode { display: block; }
 .textmode .meta { font-family: var(--mono); font-size: 12.5px; color: var(--ink-3); margin: 0 0 6px; }
 .textmode p, .textmode li { font-size: 17.5px; line-height: 1.55; }
 .textmode ul { padding-left: 1.1em; }
+.textmode h4 { font-family: var(--cond); font-size: 12.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 12px 0 0; }
+.part-no { display: inline-grid; place-items: center; width: 1.45em; height: 1.45em; margin-right: .45em; border: 1px solid var(--ink); border-radius: 50%; font: 500 .62em var(--mono); color: var(--ink); text-decoration: none; vertical-align: .18em; }
+a.part-no:hover, a.part-no:focus-visible { background: var(--signal); border-color: var(--signal); color: #fff; outline: none; }
+.part-ev b { font-family: var(--cond); font-size: .8em; letter-spacing: .12em; text-transform: uppercase; color: var(--signal); font-weight: 600; margin-right: .3em; }
 .textmode .proof { list-style: none; padding: 0; border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); display: grid; grid-template-columns: repeat(4, 1fr); }
 .textmode .proof li { padding: 10px 12px; font-family: var(--cond); font-size: 14px; line-height: 1.3; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
 .textmode .proof strong { display: block; font-family: var(--mono); font-weight: 500; color: var(--signal); font-size: 19px; margin-bottom: 2px; }
@@ -539,6 +587,9 @@ body.is-text .textmode { display: block; }
   .seg button { height: 44px; }
   .seg button::after { display: none; }
   .revisions { order: 3; width: 100%; font-size: 13px; }
+  #titleblock > .tb-cell:nth-child(-n+3), #titleblock .tb-controls { display: none; }
+  #titleblock .tb-links { order: -1; }
+  .sheet-end { display: grid; order: 4; }
   .explode.desk { display: none; }
   .panel-open .overlay { opacity: 1; }
   .panel { border-left: 0; }
@@ -586,6 +637,9 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   font-family: var(--cond); font-size: 15px; letter-spacing: .1em; text-transform: uppercase;
 }
 .th-acts button span { font-family: var(--mono); font-size: 12px; color: var(--signal); letter-spacing: 0; }
+.th-rec { grid-column: 2 / -1; font-family: var(--mono); font-size: 11.5px; line-height: 1.35; letter-spacing: 0; text-transform: none; color: var(--ink-3); padding: 0 0 8px; animation: th-in .3s ease both; }
+.th-rec:empty { display: none; }
+.th-acts button[aria-current="true"] .th-rec { color: var(--paper); opacity: .8; }
 .th-acts button:hover { background: var(--lit); }
 .th-acts button:focus-visible { outline: 2px solid var(--signal); outline-offset: -3px; }
 .th-acts button[aria-current="true"] { background: var(--ink); color: var(--paper); }
@@ -897,6 +951,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     <header class="overlay ident" id="ident"><h1>Jialong Mei</h1><p id="ident-role"></p><div class="ident-ctl" id="ident-ctl"></div></header>
     <table class="overlay revisions" id="revisions"></table>
     <section class="overlay titleblock" id="titleblock"></section>
+    <section class="overlay titleblock sheet-end" id="sheet-end"></section>
   </div>
 </main>
 
@@ -964,12 +1019,17 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       links: { cv: 'CV', linkedin: 'LinkedIn', github: 'GitHub', email: 'Email' },
       ctl: { view: 'View', drawing: 'Drawing', text: 'Text', motion: 'Motion', on: 'On', off: 'Off', sheet: 'Sheet', paper: 'Paper', blueprint: 'Blueprint', lang: 'Language' },
       curl: { big: '中文', small: 'turn the page', aria: '切换到中文版' },
+      // one example followed through every act; a line is stamped when its act finishes
+      rec: {
+        th: ['sized T2 · spec with WHEN / THEN', 'drift corrected · fresh executor at 40 %', 'own worktree per worker · liaison woken', '1 batch branch · 1 test run · 1 PR', 'unattended night · report by morning'],
+        thOcr: ['9 pages → 56 layout blocks · GPU stopped', '5 letters · 4 routed · 1 to a person', 'letter 1 linked · letter 2 held for review', 'approved by hold · audit event saved', 'baseline stored · rule v4 published']
+      },
       thOcr: { sheet: 'JM-003 · DOCUMENT PIPELINE', back: '← Architecture', note: 'The letters in this animation are synthetic.', acts: [
         ['Page parsing', 'Each scanned page is parsed on our own GPU into layout blocks, text and case identifiers. The container image is pinned, page files are stored encrypted, and the GPU shuts down when idle.'],
         ['Split & route', 'A deterministic splitter cuts the batch into letters by anchors and case identifiers. Each letter is matched only against template versions a person has approved. If none matches, the letter goes to a person.'],
         ['Extract & validate', 'Every field shows where on the page it came from, and it must pass validation before anything is automated. If the case match is uncertain, the pipeline does not guess.'],
-        ['Workstation', 'Staff use one review station with three workspaces: the daily review queue (confirm by holding a button), template evidence, and a view of how each batch was split. The interface is in Dutch, the language the staff work in.'],
-        ['Evaluate & improve', 'Every change is first replayed offline against past batches. A staff correction becomes a proposed rule, and it is used only after a colleague approves and publishes it.']
+        ['Workstation', 'Staff use one review station with three workspaces: the daily review queue (confirm by holding a button), template evidence, and a view of how each batch was split.'],
+        ['Evaluate & improve', 'Every change is first replayed offline against past batches. A staff correction becomes a proposed rule, and it is used only after a human reviewer approves and publishes it.']
       ] },
       th: { sheet: 'JM-002 · ORCHESTRATION', back: '← Architecture', note: 'An illustrative run of how I work. The tools and rules are real; the tasks are examples.', acts: [
         ['Intake', 'Each request is sized first, from T0 (trivial) to T3 (high risk). Bigger work gets a written spec with WHEN / THEN acceptance criteria before any code is written.'],
@@ -1022,8 +1082,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
             'A self-hosted vision model on our own GPU parses each page into layout blocks. The image is pinned by digest, page artifacts are stored encrypted, and the GPU stops when idle.',
             'A deterministic splitter cuts a batch into letters by anchors and case identifiers and keeps consecutive pages of the same case together.',
             'Routing uses only fixed template versions that a person has approved. A missing anchor or an ambiguous match sends the letter to manual review.',
-            'Every extracted field links to its evidence on the page, and validators such as the 16-digit fine-number check decide whether automation may continue.',
-            'Staff work in one review station with three workspaces: the daily review queue, template evidence, and a view of how each batch was split. Their corrections become proposed rules that a colleague approves.'
+            'Every extracted field links to its evidence on the page, and validators such as reference-number format checks decide whether automation may continue.',
+            'Staff work in one review station with three workspaces: the daily review queue, template evidence, and a view of how each batch was split. Their corrections become proposed rules that a human reviewer approves.'
           ]
         },
         assistants: {
@@ -1042,11 +1102,13 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
           title: ['Quant research'], sub: 'momentum · earnings drift · value',
           layers: ['EDGAR · prices · estimates', 'Point-in-time store', 'Factor signals', 'Purged cross-validation', 'Leakage tests'],
           lede: 'Personal research platform for testing equity factors on point-in-time data.',
+          asOf: { title: 'FIG. 5 · POINT-IN-TIME CUT', note: 'synthetic quarters', cut: 'AS OF', period: 'quarter ends', known: 'report published', usable: 'known on the date: used', trap: 'quarter over, report not out: excluded', future: 'not known yet', drag: 'Move the cut' },
           design: ['Data pipelines for SEC EDGAR fundamentals, long-horizon prices and analyst estimates, each stored as it was known on its date.', 'Combinatorial purged cross-validation, a protocol frozen before each run, and synthetic tests for temporal leakage.']
         },
         ebep: {
           title: ['EBEP energy study'], sub: 'ephemeral vs persistent environments', tag: 'OPEN SOURCE ▸',
           layers: ['Kubernetes: AWS and bare metal', 'Ephemeral vs persistent envs', 'k6 workload replay', 'Kepler and CCF energy', 'CSV datasets'],
+          idle: { title: 'FIG. 6 · IDLE ENERGY', lanes: ['Persistent', 'Ephemeral'], idle: 'idle energy', work: 'same workload', axis: ['0 h', '24 h'], foot: 'Schematic. Measured across 44 runs: −60–67 % energy over 24 hours.' },
           lede: 'MSc thesis comparing the energy use of two CI/CD setups: one creates a fresh preview environment for each change, the other keeps environments running.',
           repo: 'https://github.com/JialongMei/ebep-harness',
           textExtra: 'Across 44 runs, ephemeral environments used 60–67 % less energy over 24 hours, with no measured loss in service quality.',
@@ -1056,11 +1118,11 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
         offduty: {
           title: ['Off-duty'], sub: 'Mt Fuji · Alps · trails',
           lede: 'Outside work I hike, mostly in the mountains.',
-          places: ['Mt Fuji', 'Alps', 'Trails']
+          places: ['Mt Fuji', 'Alps', 'Trails'], section: 'SECTION A–A', summit: 'summit 3,776 m'
         }
       },
       text: {
-        pdf: 'Download PDF',
+        pdf: 'Download PDF', partEv: 'Evidence', partDec: 'Decisions', partLim: 'Limits', partOpen: 'Open detail',
         profileH: 'Profile',
         profile: 'Backend and applied AI engineer in Amsterdam, working on production LegalTech systems built with Django, PostgreSQL, Celery and React.',
         expH: 'Experience',
@@ -1092,12 +1154,16 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       links: { cv: '简历', linkedin: 'LinkedIn', github: 'GitHub', email: '邮箱' },
       ctl: { view: '视图', drawing: '图纸', text: '文字', motion: '动效', on: '开', off: '关', sheet: '底色', paper: '纸面', blueprint: '蓝图', lang: '语言' },
       curl: { big: 'EN', small: '翻页', aria: 'Switch to English' },
+      rec: {
+        th: ['定级 T2 · 规格含 WHEN / THEN', '纠正跑偏 · 40% 时换新执行者', '每个执行者独立 worktree · 事件唤醒协调者', '1 个批次分支 · 测试 1 次 · 1 个 PR', '夜间无人值守 · 早上出报告'],
+        thOcr: ['9 页 → 56 个版面块 · GPU 已停机', '5 封信 · 4 封已路由 · 1 封转人工', '第 1 封已关联 · 第 2 封待审核', '长按确认 · 审计事件已记录', '基线已保存 · 规则 v4 已发布']
+      },
       thOcr: { sheet: 'JM-003 · 文档流水线', back: '← 架构图', note: '动画里的信件都是合成的。', acts: [
         ['页面解析', '扫描件在我们自己的 GPU 上逐页解析成版面块、文字和案件编号。容器镜像的版本是固定的，页面文件加密存储，GPU 空闲时自动关机。'],
         ['拆分与路由', '确定性拆分器按锚点和案件编号把整批切成一封封信。每封信只和人工批准过的模板版本匹配，匹配不上就交给人处理。'],
         ['提取与校验', '每个字段都标出它在页面上的出处，校验通过后才会自动处理。案件匹配不确定时，不做自动处理。'],
-        ['工作站', '工作人员在一个审核工作站里处理三类工作：每日审核队列（长按按钮确认）、模板证据、每一批的拆分结果。界面是荷兰语，和工作人员实际使用的一致。'],
-        ['评估与改进', '每次改动先用历史批次离线回放。人工修正会生成规则草案，经同事批准并发布后才会用于匹配。']
+        ['工作站', '工作人员在一个审核工作站里处理三类工作：每日审核队列（长按按钮确认）、模板证据、每一批的拆分结果。'],
+        ['评估与改进', '每次改动先用历史批次离线回放。人工修正会生成规则草案，经人工审核人批准并发布后才会用于匹配。']
       ] },
       th: { sheet: 'JM-002 · 编排', back: '← 架构图', note: '这是我工作方式的示意运行。工具和规则是真实的，任务是示例。', acts: [
         ['接单', '每个需求先定级：T0 最小，T3 风险最高。较大的工作先写规格，验收标准写成 WHEN / THEN，然后才写代码。'],
@@ -1150,8 +1216,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
             '自托管的视觉模型在我们自己的 GPU 上把每页解析成版面块。镜像按 digest 固定，页面产物加密存储，GPU 空闲时自动停机。',
             '确定性拆分器按锚点和案件编号把一批邮件切成一封封信，同一案件的连续页不会被切开。',
             '路由只使用人工批准过的固定模板版本。缺少锚点或匹配有歧义时，转人工审核。',
-            '每个提取出的字段都指回页面上的证据，校验器（例如 16 位罚单号检查）决定能否继续自动处理。',
-            '工作人员在一个审核工作站里处理三类工作：每日审核队列、模板证据、每一批的拆分结果。人工修正会生成规则草案，由同事批准。'
+            '每个提取出的字段都指回页面上的证据，校验器（例如编号格式检查）决定能否继续自动处理。',
+            '工作人员在一个审核工作站里处理三类工作：每日审核队列、模板证据、每一批的拆分结果。人工修正会生成规则草案，由人工审核人批准。'
           ]
         },
         assistants: {
@@ -1170,11 +1236,13 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
           title: ['量化研究'], sub: '动量 · 盈利漂移 · 价值',
           layers: ['EDGAR · 价格 · 预期', 'point-in-time 存储', '因子信号', 'purged 交叉验证', '泄漏测试'],
           lede: '个人研究平台，用 point-in-time 数据检验股票因子。',
+          asOf: { title: '图 5 · 时点剖切', note: '合成的季度数据', cut: '截至', period: '季度结束', known: '报告发布', usable: '当日已知：使用', trap: '季度已结束、报告未发布：排除', future: '尚未可知', drag: '移动剖切面' },
           design: ['SEC EDGAR 基本面、长周期价格和分析师预期的数据管道，每条数据都按当时已知的版本保存。', '组合式 purged 交叉验证、每次实验前冻结的协议，以及检查时间泄漏的合成测试。']
         },
         ebep: {
           title: ['EBEP 能耗研究'], sub: '临时环境与常驻环境对比', tag: '开源 ▸',
           layers: ['Kubernetes：AWS 与裸金属', '临时与常驻环境', 'k6 负载回放', 'Kepler 与 CCF 能耗', 'CSV 数据集'],
+          idle: { title: '图 6 · 空闲能耗', lanes: ['常驻环境', '临时环境'], idle: '空闲能耗', work: '相同负载', axis: ['0 h', '24 h'], foot: '示意图。44 次实验实测：24 小时能耗降低 60–67%。' },
           lede: '硕士论文：比较两种 CI/CD 方式的能耗，一种为每次改动新建预览环境，另一种保留常驻环境。',
           repo: 'https://github.com/JialongMei/ebep-harness',
           textExtra: '44 次实验中，临时环境的 24 小时能耗低 60–67%，未测到服务质量下降。',
@@ -1184,11 +1252,11 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
         offduty: {
           title: ['工作之外'], sub: '富士山 · 阿尔卑斯 · 山路',
           lede: '平时喜欢徒步，大多在山里。',
-          places: ['富士山', '阿尔卑斯', '山路']
+          places: ['富士山', '阿尔卑斯', '山路'], section: '剖面 A–A', summit: '山顶 3,776 m'
         }
       },
       text: {
-        pdf: '下载 PDF',
+        pdf: '下载 PDF', partEv: '证据', partDec: '设计决策', partLim: '局限', partOpen: '打开详图',
         profileH: '简介',
         profile: '在阿姆斯特丹做后端和应用 AI，负责基于 Django、PostgreSQL、Celery 和 React 的生产法律科技系统。',
         expH: '工作经历',
@@ -1406,6 +1474,17 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       }
       L.zoneInfo = { ii, cols, rows };
       reveals.push([innerBorder, zg]);
+    }
+
+    // the tall sheet is a folded print: fold marks sit in the margin between projects
+    if (key === 'tall') {
+      const fg = el('g', { class: 'folds', 'aria-hidden': 'true' }, world);
+      const ys = Object.values(L.nodes).map(b => [b[1], b[1] + b[3]]).sort((a, b) => a[0] - b[0]);
+      for (let i = 1; i < ys.length; i++) {
+        const fy = (ys[i - 1][1] + ys[i][0]) / 2;
+        el('path', { d: `M${inset} ${fy} h10 M${w - inset - 10} ${fy} h10`, class: 'fold' }, fg);
+      }
+      reveals.push([outer, fg]);
     }
 
     // sheet heading and lede
@@ -1813,6 +1892,12 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
          ${segHTML(t.ctl.sheet, 'data-theme-set', [['paper', t.ctl.paper], ['blueprint', t.ctl.blueprint]], theme())}
          ${segHTML(t.ctl.motion, 'data-motion-set', [['on', t.ctl.on], ['off', t.ctl.off]], motionPref !== 'off' ? 'on' : 'off')}
        </div>`;
+    // phones: drawing number, location and settings move to the end of the page
+    const ctlHTML = `<div class="tb-cell tb-controls">
+         ${segHTML(t.ctl.sheet, 'data-theme-set', [['paper', t.ctl.paper], ['blueprint', t.ctl.blueprint]], theme())}
+         ${segHTML(t.ctl.motion, 'data-motion-set', [['on', t.ctl.on], ['off', t.ctl.off]], motionPref !== 'off' ? 'on' : 'off')}
+       </div>`;
+    document.getElementById('sheet-end').innerHTML = [...tb.querySelectorAll('.tb-cell')].slice(0, 3).map(c => c.outerHTML).join('') + ctlHTML;
     document.getElementById('ident-ctl').innerHTML =
       segHTML(t.ctl.view, 'data-view', [['drawing', t.ctl.drawing], ['text', t.ctl.text]], view());
     document.getElementById('mini-links').innerHTML = linksHTML(['linkedin', 'email']);
@@ -1823,10 +1908,15 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   function renderText() {
     const t = T(), x = t.text;
     const work = ['platform', 'ocr', 'assistants', 'fleet', 'ebep', 'quant'].map(id => {
-      const n = t.nodes[id];
-      const bullets = (n.textExtra ? [n.textExtra] : []).concat(n.design);
+      // a parts list: the item number matches the balloon on the drawing and opens that detail
+      const n = t.nodes[id], no = META[id].no;
       const repo = n.repo ? ` <a href="${n.repo}">${esc(t.panel.code)}</a>` : '';
-      return `<section class="entry"><h3>${esc(titleOf(n))}</h3><p>${esc(n.lede)}${PRINT ? '' : repo}</p><ul>${bullets.map(d => `<li>${esc(d)}</li>`).join('')}</ul></section>`;
+      const num = PRINT ? `<span class="part-no">${no}</span>` : `<a class="part-no" href="#${id}" aria-label="${esc(x.partOpen)} ${no}">${no}</a>`;
+      const list = a => `<ul>${a.map(d => `<li>${esc(d)}</li>`).join('')}</ul>`;
+      const ev = n.textExtra ? `<p class="part-ev"><b>${esc(x.partEv)}</b> ${esc(n.textExtra)}</p>` : '';
+      const dec = PRINT ? list(n.design) : `<h4>${esc(x.partDec)}</h4>${list(n.design)}`;
+      const lim = !PRINT && n.tradeoffs ? `<h4>${esc(x.partLim)}</h4>${list(n.tradeoffs)}` : '';
+      return `<section class="entry part"><h3>${num}${esc(titleOf(n))}</h3><p>${esc(n.lede)}${PRINT ? '' : repo}</p>${ev}${dec}${lim}</section>`;
     }).join('');
     document.getElementById('textmode').innerHTML =
       `<div class="tm-head"><div class="tm-top"><div><h1 tabindex="-1">Jialong Mei</h1><p class="role">${esc(t.role)} · ${esc(t.tb.locVal)}</p></div>
@@ -1854,9 +1944,11 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     let h = `<h2 id="panel-title" tabindex="-1">${esc(titleOf(n))}</h2>${n.layers && isNarrow() ? '<div class="ex-host"></div>' : ''}<p class="lede">${esc(n.lede)}</p>`;
     {
       if (m.changeSheet) h += `<div style="margin-top:28px">${changeSheetHTML()}</div>`;
+      if (n.asOf) h += asOfHTML(n.asOf);
+      if (n.idle) h += idleHTML(n.idle);
       if (m.replay) h += `<h3>${esc(P.workflow)}</h3>${fleetHTML()}`;
-      if (m.offduty) h += `<h3>${esc(P.photos)}</h3><div class="photos">${PHOTOS.map(([f, pi], i) =>
-        `<figure><a href="photos/${f}-full.webp" target="_blank" rel="noopener"><img src="photos/${f}.webp" alt="${esc(n.places[pi])}" width="480" height="600" loading="lazy"></a><figcaption><span>FIG. ${i + 1}</span>${esc(n.places[pi])}</figcaption></figure>`).join('')}</div>`;
+      if (m.offduty) h += `<h3>${esc(P.photos)}</h3>${sectionHTML(n)}<div class="photos" data-place="0">${PHOTOS.map(([f, pi], i) =>
+        `<figure data-p="${pi}"><a href="photos/${f}-full.webp" target="_blank" rel="noopener"><img src="photos/${f}.webp" alt="${esc(n.places[pi])}" width="480" height="600" loading="lazy"></a><figcaption><span>FIG. ${i + 1}</span>${esc(n.places[pi])}</figcaption></figure>`).join('')}</div>`;
       if (n.numbers) h += `<h3>${esc(P.numbers)}</h3><div class="numbers">${n.numbers.map(([v, l]) => `<div><strong>${esc(v)}</strong><span>${esc(l)}</span></div>`).join('')}</div>`;
       if (n.repo) h += `<p class="repo-link"><a class="btn" href="${n.repo}" target="_blank" rel="noopener">${esc(P.repo)} ↗</a></p>`;
       if (n.design) h += `<h3>${esc(P.design)}</h3><ul>${n.design.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`;
@@ -1865,6 +1957,107 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     h += `<div class="panel-contact"><span>${esc(P.contact)}</span><nav aria-label="${esc(P.contact)}">${linksHTML(['cv', 'linkedin', 'github', 'email'])}</nav></div>`;
     return h;
   }
+
+  /* quant: an "as of" cut sweeps through synthetic quarters; a quarter is usable only once its report is out */
+  const AQ = { n: 12, x0: 40, x1: 460, lag: [.55, .7, .45, .8, .6, .5, .75, .4, .65, .7, .5, .6] };
+  function asOfHTML(f) {
+    const qw = (AQ.x1 - AQ.x0) / AQ.n;
+    let q = '', yrs = '';
+    for (let i = 0; i < AQ.n; i++) {
+      const x = AQ.x0 + i * qw, end = x + qw, kx = end + AQ.lag[i] * qw;
+      q += `<g class="aq" data-end="${end}" data-known="${kx}"><rect x="${x + 2}" y="64" width="${qw - 4}" height="14" class="aq-p"/>
+        <path d="M${end - 2} 79 L${kx} 117" class="aq-l"/><circle cx="${kx}" cy="121" r="4" class="aq-k"/></g>`;
+      if (i % 4 === 0) yrs += `<path d="M${x} 150 v5" class="cs-line"/><text x="${x + 2}" y="168" class="cs-dim">${2022 + i / 4}</text>`;
+    }
+    return `<figure class="fig asof"><svg viewBox="0 0 500 236" role="img" aria-label="${esc(f.title)}">
+      <defs><pattern id="aq-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="hatch-line"/></pattern></defs>
+      <rect x="0.75" y="0.75" width="498.5" height="234.5" class="cs-frame"/>
+      <text x="10" y="24" class="cs-title">${esc(f.title)}</text><text x="490" y="24" class="cs-dim" text-anchor="end">${esc(f.note)}</text>
+      <path d="M0 34 H500" class="cs-rule"/>
+      <text x="${AQ.x0}" y="57" class="cs-dim">${esc(f.period)}</text><text x="${AQ.x0}" y="142" class="cs-dim">${esc(f.known)}</text>
+      <path d="M${AQ.x0} 150 H${AQ.x1 + 30}" class="cs-line"/>${yrs}
+      <rect class="aq-fog" x="0" y="44" width="0" height="104" fill="url(#aq-hatch)"/>
+      ${q}
+      <g class="aq-cut"><path d="M0 42 V176" class="aq-cut-l"/><text x="0" y="188" class="aq-cut-t" text-anchor="middle"></text></g>
+      <rect x="10" y="200" width="10" height="8" class="aq-sw use"/><text x="26" y="208" class="cs-dim">${esc(f.usable)}</text>
+      <rect x="250" y="200" width="10" height="8" fill="url(#aq-hatch)" class="aq-sw"/><text x="266" y="208" class="cs-dim">${esc(f.future)}</text>
+      <rect x="10" y="216" width="10" height="8" class="aq-sw trap"/><text x="26" y="224" class="cs-dim aq-trap-t">${esc(f.trap)}</text>
+    </svg><label class="aq-ctl"><span>${esc(f.drag)}</span><input type="range" class="aq-range" min="${AQ.x0 + 20}" max="${AQ.x1 + 20}" step="1" value="250"></label></figure>`;
+  }
+  function mountAsOf(root) {
+    const fig = root.querySelector('.asof');
+    if (!fig) return;
+    const range = fig.querySelector('.aq-range'), fog = fig.querySelector('.aq-fog'), cut = fig.querySelector('.aq-cut'), lbl = fig.querySelector('.aq-cut-t');
+    const qs = [...fig.querySelectorAll('.aq')], qw = (AQ.x1 - AQ.x0) / AQ.n;
+    const set = c => {
+      cut.setAttribute('transform', `translate(${c} 0)`);
+      fog.setAttribute('x', c); fog.setAttribute('width', Math.max(0, 500 - c));
+      const t = (c - AQ.x0) / qw, yr = 2022 + Math.floor(t / 4), mo = Math.min(12, Math.floor((t % 4) * 3) + 1);
+      lbl.textContent = `${T().nodes.quant.asOf.cut} ${yr}-${String(mo).padStart(2, '0')}`;
+      lbl.setAttribute('x', Math.max(50 - c, Math.min(0, 450 - c)));
+      qs.forEach(g => g.setAttribute('class', 'aq ' + (+g.dataset.known <= c ? 'use' : +g.dataset.end <= c ? 'trap' : 'fut')));
+    };
+    range.addEventListener('input', () => set(+range.value));
+    if (!motionOK()) { set(+range.value); return; }
+    // one slow sweep on open, then the visitor moves the cut
+    const a = AQ.x0 + 10, b = +range.value, t0 = performance.now();
+    const step = now => { const k = Math.min(1, (now - t0) / 2600); const c = a + (b - a) * (1 - Math.pow(1 - k, 3)); set(c); if (k < 1 && fig.isConnected) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+
+  /* ebep: the same workload on two lanes; the persistent lane keeps an idle band that the ephemeral lane does not */
+  function idleHTML(f) {
+    const B = [[80, 120, 30], [160, 190, 24], [230, 290, 38], [330, 360, 27]];
+    const lane = (base, idle) => {
+      let d = `M40 ${base - idle}`;
+      B.forEach(([a, b, h]) => { d += ` L${a - (idle ? 0 : 8)} ${base - idle} L${a} ${base - idle - (idle ? 0 : 6)} L${a + 6} ${base - idle - h} L${b - 6} ${base - idle - h} L${b} ${base - idle}`; });
+      return d + ` L400 ${base - idle}`;
+    };
+    const work = (base, idle) => B.map(([a, b, h]) => `<path d="M${a} ${base - idle} L${a + 6} ${base - idle - h} L${b - 6} ${base - idle - h} L${b} ${base - idle} Z" class="id-work"/>`).join('');
+    const reg = B.map(([a]) => `<path d="M${a} 44 V214" class="id-reg"/>`).join('');
+    return `<figure class="fig idle"><svg viewBox="0 0 500 262" role="img" aria-label="${esc(f.title + '. ' + f.foot)}">
+      <defs><pattern id="id-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="id-hatch"/></pattern></defs>
+      <rect x="0.75" y="0.75" width="498.5" height="260.5" class="cs-frame"/>
+      <text x="10" y="24" class="cs-title">${esc(f.title)}</text><path d="M0 34 H500" class="cs-rule"/>
+      ${reg}
+      <text x="40" y="54" class="cs-tag">${esc(f.lanes[0])}</text>
+      <rect x="40" y="98" width="360" height="22" fill="url(#id-hatch)" class="id-idle"/>${work(120, 22)}
+      <path d="${lane(120, 22)}" pathLength="1" class="id-curve d"/><path d="M40 120 H400" class="cs-line"/>
+      <path d="M404 109 h12" class="id-lead"/><text x="420" y="113" class="cs-ms id-lbl">${esc(f.idle)}</text>
+      <text x="40" y="144" class="cs-tag">${esc(f.lanes[1])}</text><text x="400" y="144" class="cs-dim" text-anchor="end">${esc(f.work)}</text>
+      ${work(210, 0)}<path d="${lane(210, 0)}" pathLength="1" class="id-curve d"/><path d="M40 210 H400" class="cs-line"/>
+      <text x="40" y="228" class="cs-dim">${esc(f.axis[0])}</text><text x="400" y="228" class="cs-dim" text-anchor="end">${esc(f.axis[1])}</text>
+      <text x="10" y="251" class="cs-dim">${esc(f.foot)}</text>
+    </svg></figure>`;
+  }
+
+  /* off-duty: a section line through the contours, one profile per place; the photos follow the chosen place */
+  const SECTIONS = [
+    t => Math.pow(Math.max(0, 1 - Math.abs(t - .5) / .46), 1.7) * (Math.abs(t - .5) < .025 ? .96 : 1),
+    t => Math.max(.12, .22 + .5 * Math.abs(Math.sin(t * 9.4)) * (.65 + .35 * Math.sin(t * 3.1 + 1)) + .04 * Math.sin(t * 41)),
+    t => .2 + .1 * Math.sin(t * 6.3) + .05 * Math.sin(t * 15 + 1)
+  ];
+  function sectionHTML(n) {
+    const prof = fn => { let d = ''; for (let i = 0; i <= 92; i++) d += `${i ? ' L' : 'M'}${20 + i * 5} ${(118 - fn(i / 92) * 92).toFixed(1)}`; return d; };
+    const counts = n.places.map((_, i) => PHOTOS.filter(p => p[1] === i).length);
+    const secs = SECTIONS.map((fn, i) => { const d = prof(fn); return `<g class="sec sec-${i}"><path d="${d} L480 118 L20 118 Z" fill="url(#sec-hatch)" class="sec-cut"/><path d="${d}" pathLength="1" class="sec-line d"/>
+      ${i === 0 ? `<path d="M250 26 V12 h16" class="id-lead"/><text x="270" y="16" class="cs-ms">${esc(n.summit)}</text>` : ''}
+      <text x="20" y="140" class="cs-dim">${esc(n.section)} · ${esc(n.places[i])}</text></g>`; }).join('');
+    return `<div class="places draw" data-place="0"><div class="rev-switch place-tabs" role="group" aria-label="${esc(n.section)}">${n.places.map((pl, i) =>
+      `<button type="button" data-place="${i}" aria-pressed="${i === 0}">${esc(pl)} <span>${counts[i]}</span></button>`).join('')}</div>
+      <svg class="section" viewBox="0 0 500 150" role="img" aria-label="${esc(n.section)}">
+      <defs><pattern id="sec-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" class="hatch-line"/></pattern></defs>
+      <path d="M20 118 H480" class="cs-line"/><text x="8" y="122" class="cs-tri-t">A</text><text x="486" y="122" class="cs-tri-t">A</text>${secs}</svg></div>`;
+  }
+  document.addEventListener('click', e => {
+    const bt = e.target.closest('.place-tabs button');
+    if (!bt) return;
+    const box = bt.closest('.places'), grid = box.nextElementSibling;
+    box.dataset.place = bt.dataset.place;
+    if (grid) grid.dataset.place = bt.dataset.place;
+    box.querySelectorAll('.place-tabs button').forEach(x => x.setAttribute('aria-pressed', String(x === bt)));
+    box.classList.remove('draw'); void box.offsetWidth; box.classList.add('draw');
+  });
 
   // Rev A and Rev B are drawn in register on one sheet: the visitor can view either one or both overlaid
   function changeSheetHTML() {
@@ -1909,8 +2102,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   }
   document.addEventListener('click', e => {
     const bt = e.target.closest('.rev-switch button');
-    if (!bt) return;
-    const f = bt.closest('.change-sheet');
+    const f = bt && bt.closest('.change-sheet');
+    if (!f) return;
     f.dataset.rev = bt.dataset.rev;
     f.querySelectorAll('.rev-switch button').forEach(x => x.setAttribute('aria-pressed', String(x === bt)));
     f.classList.remove('draw'); void f.offsetWidth; f.classList.add('draw');
@@ -2362,6 +2555,20 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const sr = stageEl.getBoundingClientRect();
     return { cx: rect.left + visibleRight / 2 / units - sr.left, cy: rect.top + VH / 2 / units - sr.top, w: box[2] * s / units, h: box[3] * s / units };
   }
+  // a detail circle (ISO 128 detail boundary) is drawn around the node while the sheet zooms into it
+  function detailRing(id) {
+    const old = document.getElementById('detail-ring');
+    if (old) old.remove();
+    const world = document.getElementById('world');
+    if (!id || !world || isNarrow() || !layouts.wide) return;
+    const [x, y, w, h] = layouts.wide.nodes[id];
+    const cx = x + w / 2, cy = y + h / 2, r = Math.hypot(w, h) / 2 + 18;
+    const g = el('g', { class: 'detail-ring', id: 'detail-ring', 'aria-hidden': 'true' }, world);
+    el('circle', { cx, cy, r, pathLength: 1 }, g);
+    const a = -Math.PI / 3, lx = cx + r * Math.cos(a), ly = cy + r * Math.sin(a);
+    el('path', { d: `M${lx} ${ly} l14 -14 h56`, pathLength: 1 }, g);
+    text(g, lx + 18, ly - 20, 'detail-ring-t', T().panel.kicker(META[id].no));
+  }
   const visibleNode = id => document.querySelector(`${isNarrow() ? '#svg-tall' : '#svg-wide'} .node[data-node="${id}"]`);
 
   let fleet = null, fleetTimer = 0;
@@ -2372,12 +2579,14 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     document.querySelectorAll(`.node[data-node="${id}"]`).forEach(n => n.classList.add('active'));
     kicker.textContent = T().panel.kicker(META[id].no);
     body.innerHTML = caseHTML(id);
+    mountAsOf(body);
     panel.scrollTop = 0;
     panel.inert = false;
     panel.classList.add('open');
     frame.inert = true; mini.inert = true; document.getElementById('curl').inert = true;
     stageEl.classList.add('panel-open');
     document.getElementById('svg-wide').classList.add('focusing');
+    detailRing(id);
     const gg = document.getElementById('guides'); if (gg) gg.classList.remove('on');
     mountExplode(id, !motionOK());
     clearTimeout(fleetTimer);
@@ -2397,6 +2606,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     panel.inert = true; frame.inert = false; mini.inert = false; document.getElementById('curl').inert = false;
     stageEl.classList.remove('panel-open');
     document.getElementById('svg-wide').classList.remove('focusing');
+    detailRing(null);
     document.querySelectorAll('.node.active').forEach(n => n.classList.remove('active'));
     focusWorld(null);
     const trigger = visibleNode(id);
@@ -2964,10 +3174,10 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   /* ---- synthetic letters: grey bars stand in for text, only the identifier is legible ---- */
   const BLOCKS = [['header', 8, 5, 34, 6], ['address', 8, 15, 38, 12], ['identifier', 50, 15, 44, 5], ['date', 54, 22, 26, 4],
     ['title', 8, 32, 62, 5], ['paragraph', 8, 40, 84, 27], ['table', 8, 70, 84, 15], ['signature', 8, 89, 30, 5]];
-  const IDS = { cjib: 'CJIB 3012 4458 7710 2291', cjib2: 'CJIB 3012 4458 9902 1174', court: 'zaak C/13/745120', tax: 'aanslag 8841.2207.3315', none: 'ref. 00417' };
-  const TAGS = { cjib: 'fine', cjib2: 'fine', court: 'court', tax: 'tax', none: '?' };
+  const IDS = { notice: 'ref. 3012-4458-7710', notice2: 'ref. 3012-4458-9902', court: 'case 2026-0412', tax: 'assessment 8841-2207', none: 'ref. 00417' };
+  const TAGS = { notice: 'notice', notice2: 'notice', court: 'court', tax: 'tax', none: '?' };
   // one synthetic batch used by every act: 9 pages, 5 letters
-  const BATCH = { kinds: ['cjib', 'cjib', 'court', 'court', 'court', 'tax', 'cjib2', 'cjib2', 'none'], cont: [false, true, false, true, true, false, false, true, false] };
+  const BATCH = { kinds: ['notice', 'notice', 'court', 'court', 'court', 'tax', 'notice2', 'notice2', 'none'], cont: [false, true, false, true, true, false, false, true, false] };
   function letterHTML(kind, cont) {
     const bars = (n, w) => Array.from({ length: n }, (_, i) => `<i style="width:${w - (i * 17 % 28)}%"></i>`).join('');
     const inner = {
@@ -3077,8 +3287,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     await line(sp, `${letters.length} letters · 0 pages lost`, 'ok');
     box('th-node head th-spawn', 510, 222, 580, 40, '<b>Routing Card</b><span>published, human-approved versions only</span>');
     const fams = [
-      ['cjib', 'CJIB › fine notice', 'v3 · approved'], ['court', 'Court › judgment', 'v2 · approved'],
-      ['tax', 'Municipality › tax assessment', 'v5 · approved'], ['off', 'Court › summons', 'v1 · inactive · pruned'],
+      ['notice', 'Agency › penalty notice', 'v3 · approved'], ['court', 'Court › judgment', 'v2 · approved'],
+      ['tax', 'Tax office › assessment', 'v5 · approved'], ['off', 'Court › summons', 'v1 · inactive · pruned'],
       ['none', 'Manual review queue', 'fail closed']
     ];
     const rows = {};
@@ -3088,7 +3298,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       await sleep(160);
     }
     for (const l of letters) {
-      const r = rows[l.kind === 'cjib2' ? 'cjib' : l.kind];
+      const r = rows[l.kind === 'notice2' ? 'notice' : l.kind];
       const w = wire(sp, r);
       await send(w, l.kind === 'none' ? 'NO MATCH' : `LETTER ${letters.indexOf(l) + 1}`, { cls: l.kind === 'none' ? 'hot' : '', dur: rnd(650, 850) });
       r.n++; r.el.querySelector('em').textContent = '× ' + r.n;
@@ -3101,10 +3311,10 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 
   /* ---- OCR act III: fields with evidence, validators, abstention ---- */
   async function ocrExtract() {
-    const pg = page(40, 14, 250, 'cjib');
+    const pg = page(40, 14, 250, 'notice');
     const lab = box('th-node head th-spawn', 360, 14, 350, 40, '<b>Labeler</b><span>fields from the published version</span>');
     void lab;
-    const fields = [['fine number', '3012 4458 7710 2291', 'identifier', .99], ['letter date', '29 Sep 2026', 'date', .98], ['deadline', '10 Nov 2026', 'paragraph', .93], ['amount', '€ 104,00', 'table', .97]];
+    const fields = [['reference no.', '3012-4458-7710', 'identifier', .99], ['letter date', '29 Sep 2026', 'date', .98], ['deadline', '10 Nov 2026', 'paragraph', .93], ['amount', '€ 104.00', 'table', .97]];
     const rows = [];
     for (const [i, [name, val, blk, conf]] of fields.entries()) {
       const r = box('th-node field th-spawn', 360, 66 + i * 64, 350, 52, `<b>${esc(name)}</b><span class="v"></span><i class="cf"><s style="width:0%"></s></i><em>p1</em>`);
@@ -3120,7 +3330,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     }
     const gate = pane(760, 14, 330, 300, 'Validation gate', '');
     await send(wire(rows[0], gate), 'FIELDS');
-    await line(gate, 'fine number has 16 digits', 'ok');
+    await line(gate, 'reference no. has the expected format', 'ok');
     await line(gate, 'deadline after letter date', 'ok');
     await line(gate, 'amount parses as currency', 'ok');
     await line(gate, 'case match · 1 candidate', 'ok');
@@ -3137,13 +3347,13 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 
   /* ---- OCR act IV: the review workstation ---- */
   function factsHTML() {
-    return [['Boetenummer', '3012 4458 7710 2291'], ['Briefdatum', '29-09-2026'], ['Termijn', '10-11-2026'], ['Bedrag', '€ 104,00']]
+    return [['Reference no.', '3012-4458-7710'], ['Letter date', '29 Sep 2026'], ['Deadline', '10 Nov 2026'], ['Amount', '€ 104.00']]
       .map(([k, v]) => `<div class="ap-fact"><span>${k}</span><b>${v}</b><a>p1</a></div>`).join('');
   }
   async function ocrStation() {
     const app = box('th-app th-spawn', 40, 6, 1050, 610,
       `<div class="ap-bar"><i></i><i></i><i></i><span>Document workstation</span></div>
-       <div class="ap-nav"><b class="ap-ind"></b><span data-v="0">Beoordelen</span><span data-v="1">Sjablonen</span><span data-v="2">Splitsingen</span></div>
+       <div class="ap-nav"><b class="ap-ind"></b><span data-v="0">Review</span><span data-v="1">Templates</span><span data-v="2">Splits</span></div>
        <div class="ap-view"></div><div class="ap-toast"></div>`);
     const view = app.el.querySelector('.ap-view'), ind = app.el.querySelector('.ap-ind'), toast = app.el.querySelector('.ap-toast');
     const tabs = [...app.el.querySelectorAll('.ap-nav span')];
@@ -3160,9 +3370,9 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     // daily review: PDF on the left, fact cards with evidence links on the right, hold to confirm
     tabs[0].classList.add('on');
     view.innerHTML = `<div class="ap-review">
-      <div class="ap-list">${[['scan_0412.pdf', 'Te beoordelen', 'todo'], ['scan_0411.pdf', 'Akkoord', 'ok'], ['scan_0409.pdf', 'Twijfel', 'doubt']].map(([f, st, c], i) => `<div class="ap-row${i ? '' : ' on'}"><b>${f}</b><span>29-09</span><em class="${c}">${st}</em></div>`).join('')}</div>
-      <div class="ap-pdf"><div class="th-page inline">${letterHTML('cjib')}</div></div>
-      <div class="ap-side"><div class="ap-facts">${factsHTML()}</div><div class="ap-actions"><button type="button" class="ap-hold" tabindex="-1">Goedkeuren</button><button type="button" tabindex="-1">Aanpassen</button></div></div></div>`;
+      <div class="ap-list">${[['scan_0412.pdf', 'To review', 'todo'], ['scan_0411.pdf', 'Approved', 'ok'], ['scan_0409.pdf', 'Unsure', 'doubt']].map(([f, st, c], i) => `<div class="ap-row${i ? '' : ' on'}"><b>${f}</b><span>29 Sep</span><em class="${c}">${st}</em></div>`).join('')}</div>
+      <div class="ap-pdf"><div class="th-page inline">${letterHTML('notice')}</div></div>
+      <div class="ap-side"><div class="ap-facts">${factsHTML()}</div><div class="ap-actions"><button type="button" class="ap-hold" tabindex="-1">Approve</button><button type="button" tabindex="-1">Edit</button></div></div></div>`;
     fitIds(view);
     await sleep(900);
     for (const f of view.querySelectorAll('.ap-fact')) { f.classList.add('look'); await sleep(420); f.classList.remove('look'); }
@@ -3173,16 +3383,16 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     const fill = t => hold.style.setProperty('--p', Math.min(100, (t - t0) / 20) + '%');
     TH.frame.add(fill);
     try { await sleep(2000); } finally { TH.frame.delete(fill); }
-    hold.classList.remove('holding'); hold.classList.add('done'); hold.textContent = '✓ Goedgekeurd';
-    const st = view.querySelector('.ap-row.on em'); st.textContent = 'Akkoord'; st.className = 'ok';
-    await say(`Goedgekeurd · audit event ${hex(6)}`);
+    hold.classList.remove('holding'); hold.classList.add('done'); hold.textContent = '✓ Approved';
+    const st = view.querySelector('.ap-row.on em'); st.textContent = 'Approved'; st.className = 'ok';
+    await say(`Approved · audit event ${hex(6)}`);
     // templates: anchors per sample, best candidate pinned
     await tab(1);
-    const anchors = ['Centraal Justitieel Incassobureau', 'Beschikking', 'Boetenummer · 16 cijfers', 'Betalen vóór'];
-    view.innerHTML = `<div class="ap-tpl"><div class="ap-pin"><b>Beste kandidaat</b><span>CJIB › boete · v3</span><em>5 / 5 samples</em></div>
-      <table class="ap-mx"><thead><tr><th>Anker</th>${[1, 2, 3, 4, 5].map(i => `<th>S${i}</th>`).join('')}</tr></thead><tbody>
+    const anchors = ['Issuing agency', 'Decision heading', 'Reference no. format', 'Pay before'];
+    view.innerHTML = `<div class="ap-tpl"><div class="ap-pin"><b>Best candidate</b><span>Agency › penalty notice · v3</span><em>5 / 5 samples</em></div>
+      <table class="ap-mx"><thead><tr><th>Anchor</th>${[1, 2, 3, 4, 5].map(i => `<th>S${i}</th>`).join('')}</tr></thead><tbody>
       ${anchors.map(a => `<tr><td>${a}</td>${[1, 2, 3, 4, 5].map(() => '<td></td>').join('')}</tr>`).join('')}</tbody></table>
-      <p class="ap-note">100 % = alle verplichte ankers letterlijk gevonden</p></div>`;
+      <p class="ap-note">100 % = every required anchor found verbatim</p></div>`;
     const cells = [...view.querySelectorAll('.ap-mx td:not(:first-child)')];
     for (const [i, c] of cells.entries()) {
       const miss = i === 18;
@@ -3190,16 +3400,16 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       await sleep(70);
     }
     await sleep(500);
-    await say('S4 mist "Betalen vóór" · pagina 2 openen');
+    await say('S4 is missing "Pay before" · open page 2');
     // split control: a batch drills down to every child letter
     await tab(2);
-    view.innerHTML = `<div class="ap-split"><div class="ap-batch"><b>Batch 2026-10-12</b><span>9 pagina's · 5 brieven</span><em class="ok">Gesplitst</em></div><div class="ap-kids"></div></div>`;
+    view.innerHTML = `<div class="ap-split"><div class="ap-batch"><b>Batch 2026-10-12</b><span>9 pages · 5 letters</span><em class="ok">Split</em></div><div class="ap-kids"></div></div>`;
     await sleep(600);
     await go(view.querySelector('.ap-batch'));
     cur.el.classList.add('click'); await sleep(160); cur.el.classList.remove('click');
     view.querySelector('.ap-batch').classList.add('open');
     const kids = view.querySelector('.ap-kids');
-    for (const [i, [id, type, s, c]] of [['3012 4458 7710 2291', 'Boete', 'Gekoppeld', 'ok'], ['C/13/745120', 'Vonnis', 'Handmatige controle', 'doubt'], ['8841.2207.3315', 'Aanslag', 'Gekoppeld', 'ok'], ['3012 4458 9902 1174', 'Boete', 'Gekoppeld', 'ok'], ['—', 'Onbekend', 'Handmatige controle', 'doubt']].entries()) {
+    for (const [i, [id, type, s, c]] of [['3012-4458-7710', 'Notice', 'Linked', 'ok'], ['2026-0412', 'Judgment', 'Manual check', 'doubt'], ['8841-2207', 'Assessment', 'Linked', 'ok'], ['3012-4458-9902', 'Notice', 'Linked', 'ok'], ['—', 'Unknown', 'Manual check', 'doubt']].entries()) {
       const r = document.createElement('div'); r.className = 'ap-kid';
       r.innerHTML = `<span>${i + 1}</span><b>${id}</b><span>${type}</span><em class="${c}">${s}</em><a>PDF</a>`;
       kids.appendChild(r);
@@ -3214,9 +3424,9 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     await line(ev, 'evaluate --replay batch-A', 'cmd');
     for (const [s, k] of [['metrics        exact letter splits · split F1', 'out'], ['abstentions    counted apart from errors', 'dim'], ['baseline       stored for the next change', 'ok']]) await line(ev, s, k);
     await signoff(ev, ['BASELINE', nowStamp()]);
-    const A = box('th-node loop th-spawn', 540, 30, 240, 60, '<b>Staff correction</b><span>Aanpassen · deadline 10-11 → 11-11</span>');
+    const A = box('th-node loop th-spawn', 540, 30, 240, 60, '<b>Staff correction</b><span>Edit · deadline 10 Nov → 11 Nov</span>');
     const B = box('th-node loop th-spawn', 850, 30, 240, 60, '<b>Proposed field rule</b><span>AI drafts it, with evidence</span>');
-    const C = pane(850, 170, 240, 150, 'Domain colleague', '');
+    const C = pane(850, 170, 240, 150, 'Human reviewer', '');
     const D = box('th-node loop th-spawn', 540, 200, 240, 60, '<b>Version v4</b><span>awaiting approval</span>');
     const E = box('th-node loop th-spawn', 540, 340, 240, 60, '<b>Matcher</b><span>sees only published versions</span>');
     const ab = wire(A, B), bc = wire(B, C), cd = wire(C, D), de = wire(D, E), ea = wire(E, A);
@@ -3230,7 +3440,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     D.el.querySelector('span').textContent = `immutable · sha256:${hex(8)}`;
     await send(de, 'v4');
     await send(ea, 'NEXT BATCH');
-    box('th-card th-spawn', 540, 440, 550, null, '<span class="th-k">rule</span><q>AI may propose field rules; only colleague-approved, published versions reach the matcher.</q>');
+    box('th-card th-spawn', 540, 440, 550, null, '<span class="th-k">rule</span><q>AI may propose field rules; only human-approved, published versions reach the matcher.</q>');
     await sleep(3000);
   }
 
@@ -3290,6 +3500,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       try {
         await sleep(450);
         await SHEETS[TH.sheet].acts[i]();
+        stampRecord(i);
         await sleep(2400);
       } catch (e) {
         if (e instanceof Abort) return;
@@ -3300,12 +3511,17 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     }
   }
 
+  // the example's record: each finished act adds its result under the act's name in the rail
+  function stampRecord(i) {
+    const r = document.querySelector(`#th-acts [data-act="${i}"] .th-rec`);
+    if (r) r.textContent = '✓ ' + T().rec[SHEETS[TH.sheet].key][i];
+  }
   function renderTheaterText() {
     const t = T()[SHEETS[TH.sheet].key];
     document.getElementById('th-sheet-id').textContent = t.sheet;
     document.getElementById('th-back-l').textContent = t.back;
     document.getElementById('th-note').textContent = t.note;
-    document.getElementById('th-acts').innerHTML = t.acts.map(([ti], i) => `<button type="button" data-act="${i}"><span>${ROMAN[i]}</span>${esc(ti)}</button>`).join('');
+    document.getElementById('th-acts').innerHTML = t.acts.map(([ti], i) => `<button type="button" data-act="${i}"><span>${ROMAN[i]}</span>${esc(ti)}<small class="th-rec"></small></button>`).join('');
     document.getElementById('th-close').textContent = T().panel.close;
   }
   function layoutTheater() {
