@@ -476,7 +476,7 @@ html.vt-fade::view-transition-new(root) { animation: vt-in .35s ease both; }
 .cs-txt { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
 .cs-dim { font-family: var(--mono); font-size: 10.5px; fill: var(--ink-3); }
 .cs-ms { font-family: var(--mono); font-size: 12px; fill: var(--signal); font-weight: 500; }
-.cs-cloud { fill: none; stroke: var(--signal); stroke-width: 1.2; }
+.cs-cloud { fill: none; stroke: var(--signal); stroke-width: 1; }
 .cs-tri { fill: var(--paper); stroke: var(--signal); stroke-width: 1.2; }
 .cs-tri-t { font-family: var(--iso); font-size: 11px; fill: var(--signal); }
 .cs-note { font-size: 11px; }
@@ -486,8 +486,9 @@ html.vt-fade::view-transition-new(root) { animation: vt-in .35s ease both; }
 .change-sheet[data-rev="ab"] .rv-a { opacity: .5; }
 .change-sheet[data-rev="ab"] .rv-a .cs-box, .change-sheet[data-rev="ab"] .rv-a .cs-line { stroke: var(--ink-3); stroke-dasharray: .02 .015; }
 .change-sheet[data-rev="ab"] .rv-a text { fill: var(--ink-3); }
-.change-sheet.draw:not([data-rev="a"]) .rv-b .d, .change-sheet.draw[data-rev="ab"] .rv-cloud .d { stroke-dasharray: 1; animation: cs-draw 1.1s cubic-bezier(.4, 0, .2, 1) both; }
-.change-sheet.draw[data-rev="ab"] .rv-cloud .d { animation-delay: .9s; }
+.change-sheet.draw:not([data-rev="a"]) .rv-b .d { stroke-dasharray: 1; animation: cs-draw 1.1s cubic-bezier(.4, 0, .2, 1) both; }
+.change-sheet .rv-cloud .cs-cloud { stroke-dasharray: 6 4; }
+.change-sheet.draw[data-rev="ab"] .rv-cloud .cs-cloud { animation: cs-fade .4s ease .9s both; }
 .change-sheet.draw[data-rev="ab"] .rv-cloud text, .change-sheet.draw[data-rev="ab"] .rv-cloud .cs-tri { animation: cs-fade .4s ease 1.8s both; }
 @keyframes cs-fade { from { opacity: 0; } }
 @keyframes cs-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
@@ -2099,17 +2100,8 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       `<text x="10" y="52" class="cs-tag">${esc(s.revs[0])} · ${esc(s.before)}</text><text x="10" y="288" class="cs-dim">${esc(s.footBefore)}</text>`;
     b += box(330, 62, 160, 134, s.cache, 'cs-hot') + arrow(410, 196, 410, 220) + `<text x="418" y="213" class="cs-ms">~1 ms</text>` +
       `<text x="330" y="52" class="cs-tag">${esc(s.revs[1])} · ${esc(s.after)}</text><text x="330" y="288" class="cs-dim">${esc(s.footAfter)}</text>`;
-    // revision cloud and triangle around the part that changed
-    const cloud = (x, y, w, h, r) => {
-      let d = `M${x} ${y}`; const arc = (tx, ty) => { d += ` A${r} ${r} 0 0 1 ${tx} ${ty}`; };
-      const nx = Math.round(w / (r * 1.6)), ny = Math.round(h / (r * 1.6));
-      for (let k = 1; k <= nx; k++) arc(x + w * k / nx, y);
-      for (let k = 1; k <= ny; k++) arc(x + w, y + h * k / ny);
-      for (let k = 1; k <= nx; k++) arc(x + w - w * k / nx, y + h);
-      for (let k = 1; k <= ny; k++) arc(x, y + h - h * k / ny);
-      return d + ' Z';
-    };
-    const rc = `<g class="rv-cloud"><path d="${cloud(324, 58, 170, 140, 9)}" pathLength="1" class="cs-cloud d"/>
+    // a straight dashed boundary and a revision triangle mark the part that changed
+    const rc = `<g class="rv-cloud"><rect x="322" y="56" width="174" height="146" class="cs-cloud"/>
       <path d="M296 54 L307 36 L318 54 Z" class="cs-tri"/><text x="307" y="50" class="cs-tri-t" text-anchor="middle">B</text>
       <text x="330" y="270" class="cs-ms cs-note">${esc(s.note)}</text></g>`;
     const btn = (k, i) => `<button type="button" data-rev="${k}" aria-pressed="${k === 'ab'}">${esc(s.revs[i])}</button>`;
