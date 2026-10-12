@@ -99,10 +99,13 @@ button { font: inherit; color: inherit; }
 .tb-cell { grid-column: span 4; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); padding: .45em .7em .5em; min-width: 0; }
 .tb-cell.end { border-right: 0; }
 .sheet-end { display: none; }
+/* shown only while the opening drawing plays */
+.skip-hint { position: fixed; left: 50%; bottom: 6px; transform: translateX(-50%); margin: 0; font-family: var(--iso); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+.stage.intro .skip-hint { opacity: 1; transition-delay: .5s; }
 .tb-label { display: block; font-family: var(--iso); font-size: max(10px, .72em); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: .2em; }
 .tb-mono { font-family: var(--iso); font-size: 1.05em; }
 .tb-num { grid-column: span 3; }
-.tb-num strong { display: block; font-family: var(--mono); font-weight: 500; font-size: 1.22em; color: var(--signal); white-space: nowrap; }
+.tb-num strong { display: block; font-family: var(--mono); font-weight: 500; font-size: 1.1em; letter-spacing: -.01em; color: var(--signal); white-space: nowrap; }
 .tb-num span { font-size: max(10.5px, .78em); color: var(--ink-2); line-height: 1.25; display: block; margin-top: .15em; }
 .tb-links { grid-column: span 12; display: flex; padding: 0; border-right: 0; }
 .tb-links a {
@@ -964,6 +967,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     <svg class="tall" id="svg-tall" role="group"></svg>
     <header class="overlay ident" id="ident"><h1>Jialong Mei</h1><p id="ident-role"></p><div class="ident-ctl" id="ident-ctl"></div></header>
     <table class="overlay revisions" id="revisions"></table>
+    <p class="skip-hint" id="skip-hint" aria-hidden="true"></p>
     <section class="overlay titleblock" id="titleblock"></section>
     <section class="overlay titleblock sheet-end" id="sheet-end"></section>
   </div>
@@ -1033,6 +1037,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       links: { cv: 'CV', linkedin: 'LinkedIn', github: 'GitHub', email: 'Email' },
       ctl: { view: 'View', drawing: 'Drawing', text: 'Text', motion: 'Motion', on: 'On', off: 'Off', sheet: 'Sheet', paper: 'Paper', blueprint: 'Blueprint', lang: 'Language' },
       curl: { big: '中文', small: 'turn the page', aria: '切换到中文版' },
+      skip: 'Click anywhere to skip the drawing',
       // one example followed through every act; a line is stamped when its act finishes
       rec: {
         th: ['sized T2 · spec with WHEN / THEN', 'drift corrected · fresh executor at 40 %', 'own worktree per worker · liaison woken', '1 batch branch · 1 test run · 1 PR', 'unattended night · report by morning'],
@@ -1168,6 +1173,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       links: { cv: '简历', linkedin: 'LinkedIn', github: 'GitHub', email: '邮箱' },
       ctl: { view: '视图', drawing: '图纸', text: '文字', motion: '动效', on: '开', off: '关', sheet: '底色', paper: '纸面', blueprint: '蓝图', lang: '语言' },
       curl: { big: 'EN', small: '翻页', aria: 'Switch to English' },
+      skip: '点击任意处跳过绘制',
       rec: {
         th: ['定级 T2 · 规格含 WHEN / THEN', '纠正跑偏 · 40% 时换新执行者', '每个执行者独立 worktree · 事件唤醒协调者', '1 个批次分支 · 测试 1 次 · 1 个 PR', '夜间无人值守 · 早上出报告'],
         thOcr: ['9 页 → 56 个版面块 · GPU 已停机', '5 封信 · 4 封已路由 · 1 封转人工', '第 1 封已关联 · 第 2 封待审核', '长按确认 · 审计事件已记录', '基线已保存 · 规则 v4 已发布']
@@ -3762,6 +3768,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
   if (wantPlot && plotQueue) {
     intro = true;
     stageEl.classList.add('intro');
+    document.getElementById('skip-hint').textContent = T().skip;
     plot(plotQueue, () => { intro = false; plotQueue = null; stageEl.classList.remove('intro'); syncMotion(); });
   } else syncMotion();
   if (META[location.hash.slice(1)]) setTimeout(syncRoute, 300);
