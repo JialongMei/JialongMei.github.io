@@ -912,7 +912,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       links: { cv: 'CV', linkedin: 'LinkedIn', github: 'GitHub', email: 'Email' },
       ctl: { view: 'View', drawing: 'Drawing', text: 'Text', motion: 'Motion', on: 'On', off: 'Off', sheet: 'Sheet', paper: 'Paper', blueprint: 'Blueprint', lang: 'Language' },
       curl: { big: '中文', small: 'turn the page', aria: '切换到中文版' },
-      thOcr: { sheet: 'JM-003 · DOCUMENT PIPELINE', back: '← Architecture', note: 'Runs in shadow on staging. The letters here are synthetic; the split metrics come from replaying a real batch.', acts: [
+      thOcr: { sheet: 'JM-003 · DOCUMENT PIPELINE', back: '← Architecture', note: 'The letters in this animation are synthetic.', acts: [
         ['Page parsing', 'Each scanned page is parsed on our own GPU into layout blocks, text and case identifiers. The container image is pinned, page files are stored encrypted, and the GPU shuts down when idle.'],
         ['Split & route', 'A deterministic splitter cuts the batch into letters by anchors and case identifiers. Each letter is matched only against template versions a person has approved. If none matches, the letter goes to a person.'],
         ['Extract & validate', 'Every field shows where on the page it came from, and it must pass validation before anything is automated. If the case match is uncertain, the pipeline does not guess.'],
@@ -961,11 +961,10 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
           lede: 'Legal mail arrives as large scanned batches. The pipeline splits each batch into letters, routes every letter to a human-approved template, extracts the deadline and other fields with their evidence, and sends anything uncertain to a person at a review station.',
           design: [
             'A self-hosted vision model on our own GPU parses each page into layout blocks. The image is pinned by digest, page artifacts are stored encrypted, and the GPU stops when idle.',
-            'A deterministic splitter cuts a batch into letters by anchors and case identifiers and keeps consecutive pages of the same case together. On a replayed 827-page batch it split 402 of 403 letters exactly (F1 99.88 %).',
+            'A deterministic splitter cuts a batch into letters by anchors and case identifiers and keeps consecutive pages of the same case together.',
             'Routing uses only fixed template versions that a person has approved. A missing anchor or an ambiguous match sends the letter to manual review.',
             'Every extracted field links to its evidence on the page, and validators such as the 16-digit fine-number check decide whether automation may continue.',
-            'Staff work in one review station with three workspaces: the daily review queue, template evidence, and a view of how each batch was split. Their corrections become proposed rules that a colleague approves.',
-            'Status: running in shadow on staging; production still uses the earlier pipeline.'
+            'Staff work in one review station with three workspaces: the daily review queue, template evidence, and a view of how each batch was split. Their corrections become proposed rules that a colleague approves.'
           ]
         },
         assistants: {
@@ -1034,7 +1033,7 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
       links: { cv: '简历', linkedin: 'LinkedIn', github: 'GitHub', email: '邮箱' },
       ctl: { view: '视图', drawing: '图纸', text: '文字', motion: '动效', on: '开', off: '关', sheet: '底色', paper: '纸面', blueprint: '蓝图', lang: '语言' },
       curl: { big: 'EN', small: '翻页', aria: 'Switch to English' },
-      thOcr: { sheet: 'JM-003 · 文档流水线', back: '← 架构图', note: '在 staging 上以 shadow 模式运行。这里的信件是合成的；拆分指标来自真实批次的回放。', acts: [
+      thOcr: { sheet: 'JM-003 · 文档流水线', back: '← 架构图', note: '动画里的信件都是合成的。', acts: [
         ['页面解析', '扫描件在我们自己的 GPU 上逐页解析成版面块、文字和案件编号。容器镜像的版本是固定的，页面文件加密存储，GPU 空闲时自动关机。'],
         ['拆分与路由', '确定性拆分器按锚点和案件编号把整批切成一封封信。每封信只和人工批准过的模板版本匹配，匹配不上就交给人处理。'],
         ['提取与校验', '每个字段都标出它在页面上的出处，校验通过后才会自动处理。案件匹配不确定时，不做自动处理。'],
@@ -1083,11 +1082,10 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
           lede: '法律信件以大批量扫描件的形式进来。流水线把每批拆成一封封信，把每封信路由到经人工批准的模板，连同证据提取期限和其他字段，不确定的交给审核工作站人工处理。',
           design: [
             '自托管的视觉模型在我们自己的 GPU 上把每页解析成版面块。镜像按 digest 固定，页面产物加密存储，GPU 空闲时自动停机。',
-            '确定性拆分器按锚点和案件编号把一批邮件切成一封封信，同一案件的连续页不会被切开。在回放的 827 页批次上，403 封信中 402 封切分完全正确（F1 99.88%）。',
+            '确定性拆分器按锚点和案件编号把一批邮件切成一封封信，同一案件的连续页不会被切开。',
             '路由只使用人工批准过的固定模板版本。缺少锚点或匹配有歧义时，转人工审核。',
             '每个提取出的字段都指回页面上的证据，校验器（例如 16 位罚单号检查）决定能否继续自动处理。',
-            '工作人员在一个审核工作站里处理三类工作：每日审核队列、模板证据、每一批的拆分结果。人工修正会生成规则草案，由同事批准。',
-            '状态：在 staging 上以 shadow 模式运行；生产环境仍使用之前的流水线。'
+            '工作人员在一个审核工作站里处理三类工作：每日审核队列、模板证据、每一批的拆分结果。人工修正会生成规则草案，由同事批准。'
           ]
         },
         assistants: {
@@ -2988,10 +2986,10 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
 
   /* ---- OCR act V: offline evaluation and the human-approved improvement loop ---- */
   async function ocrLoop() {
-    const ev = pane(40, 14, 430, 330, 'Evaluator', 'offline replay · shadow');
-    await line(ev, 'evaluate --replay batch-A --mode shadow', 'cmd');
-    for (const [s, k] of [['recorded batch 827 pages · 403 letters', 'out'], ['exact splits   402 / 403', 'out'], ['split F1       99.88 %', 'ok'], ['abstentions    counted apart from errors', 'dim']]) await line(ev, s, k);
-    await signoff(ev, ['BASELINE', nowStamp(), '827 pages']);
+    const ev = pane(40, 14, 430, 330, 'Evaluator', 'offline replay');
+    await line(ev, 'evaluate --replay batch-A', 'cmd');
+    for (const [s, k] of [['metrics        exact letter splits · split F1', 'out'], ['abstentions    counted apart from errors', 'dim'], ['baseline       stored for the next change', 'ok']]) await line(ev, s, k);
+    await signoff(ev, ['BASELINE', nowStamp()]);
     const A = box('th-node loop th-spawn', 540, 30, 240, 60, '<b>Staff correction</b><span>Aanpassen · deadline 10-11 → 11-11</span>');
     const B = box('th-node loop th-spawn', 850, 30, 240, 60, '<b>Proposed field rule</b><span>AI drafts it, with evidence</span>');
     const C = pane(850, 170, 240, 150, 'Domain colleague', '');
@@ -3009,7 +3007,6 @@ body.theater-open .frame { position: relative; z-index: 7; pointer-events: none;
     await send(de, 'v4');
     await send(ea, 'NEXT BATCH');
     box('th-card th-spawn', 540, 440, 550, null, '<span class="th-k">rule</span><q>AI may propose field rules; only colleague-approved, published versions reach the matcher.</q>');
-    chip(40, 380, 'status · shadow on staging · production cut-over pending');
     await sleep(3000);
   }
 
