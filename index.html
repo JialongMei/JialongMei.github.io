@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Jialong Mei · Full Stack Engineer, Backend &amp; Agentic AI</title>
-<meta name="description" content="Jialong Mei, full-stack engineer in Amsterdam. Backend and system design, owner of production releases, LLM features in production, and an agent platform built on top of an open-source orchestrator, most of its code his own, with cascading memory, versioned skills, risk-based model routing and a policy engine.">
+<meta name="description" content="Jialong Mei, full-stack engineer in Amsterdam. Backend and system design, owner of production releases, LLM features in production, and Hayabusa, the agent platform he built, with cascading memory, versioned skills, risk-based model routing and a policy engine.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Jialong Mei · Full Stack Engineer, Backend &amp; Agentic AI">
-<meta property="og:description" content="Full-stack engineer, strongest in backend and system design. Owns production releases for backend and frontend, ships LLM features to production, and builds an agent platform on top of an open-source orchestrator, most of its code his own: knowledge base, cascading context, versioned skills, routing and policy. Amsterdam.">
+<meta property="og:description" content="Full-stack engineer, strongest in backend and system design. Owns production releases for backend and frontend, ships LLM features to production, and built Hayabusa, an agent platform: knowledge base, cascading context, versioned skills, routing and policy. Amsterdam.">
 <link rel="canonical" href="https://jialongmei.github.io/">
 <meta property="og:url" content="https://jialongmei.github.io/">
-<meta property="og:image" content="https://jialongmei.github.io/og-sheet-2026-11-17.png">
+<meta property="og:image" content="https://jialongmei.github.io/og-sheet-2026-11-17b.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -1339,7 +1339,7 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
       role: 'Full Stack Engineer · Backend & Agentic AI',
       sheet: 'SELECT A PROJECT · HOLD TO MAGNIFY',
       sheetTall: 'SYSTEM OVERVIEW · TAP A PROJECT',
-      lede: ['I run AI as my research pipeline and land', 'new tools in live code, tested and reviewed.'],
+      lede: ['I own backend and frontend releases in production', 'and built the agent platform my engineering runs on.'],
       tb: { dwg: 'Dwg no.', loc: 'Location', locVal: 'Amsterdam, NL', upd: 'Updated' },
       nums: [
         ['240 → 1 ms', 'file-URL generation per request'],
@@ -1367,7 +1367,7 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
       th: { sheet: 'JM-002 · ORCHESTRATION', back: '← Architecture', note: 'An illustrative run of how I work. The tools and rules are real; the tasks are examples.', acts: [
         ['Intake', 'Every request is risk-tiered first, from T0 (trivial) to T3 (high blast radius). Agents pull prior decisions from a local knowledge base, and anything non-trivial gets a spec with WHEN / THEN acceptance criteria before a line of code is written.'],
         ['Supervision', 'Supervisor / executor pattern: one supervisor dispatches the task to a pinned executor and blocks on its lifecycle events instead of polling. It course-corrects drift and rotates in a fresh executor before the context window degrades.'],
-        ['Fleet', 'Hayabusa, the agent platform I built on top of an open-source (MIT) orchestrator (most of its code is mine), runs a multi-agent crew under a liaison agent. Each worker gets an isolated git worktree, a router assigns models by risk and workload type, and an event-driven watcher that burns zero model tokens wakes the liaison. I stay in the loop only at decision points.'],
+        ['Fleet', 'Hayabusa, the agent platform I built, runs a multi-agent crew under a liaison agent. Each worker gets an isolated git worktree, a router assigns models by risk and workload type, and an event-driven watcher that burns zero model tokens wakes the liaison. I stay in the loop only at decision points.'],
         ['Batch', 'Workers validate locally and are blocked from pushing at the git-hook level. Verified branches are integrated into a single batch branch: one test pass, one pull request, one review surface.'],
         ['Overnight', 'Unattended overnight execution. Long-horizon runs checkpoint their state to a durable STATUS file, fan out bounded subtasks to child agents, and pass an independent review gate at every milestone. Context rotates on threshold, the run lands as a report by morning, and merges stay behind a human approval gate.']
       ] },
@@ -1391,15 +1391,15 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
         cache: ['process cache', 'session +', 'S3 resource', 'built once, locked'],
         footBefore: 'every request, every thread', footAfter: 'once per process',
         revs: ['Rev A', 'Rev B', 'A + B'], note: '3 clients → 1 shared',
-        aria: 'Before: each request thread created a new boto3 session and loaded the S3 service model, about 240 ms. After: all threads share one session and resource per process, built once under a lock, about 1 ms.'
+        aria: 'Before: each request thread created a new boto3 session and loaded the S3 service model, 240 ms. After: all threads share one session and resource per process, built once under a lock, 1 ms.'
       },
       nodes: {
         platform: {
           title: ['Production platform'], sub: 'Django · React · Kubernetes', tag: 'BEFORE / AFTER ▸',
           lede: 'A production Django and React platform at a legal-tech company. I ship features across the whole stack, from schema changes to Kubernetes deploys.',
           layers: ['S3 file storage', 'PostgreSQL', 'Celery workers', 'Django REST API', 'React frontend'],
-          design: ['Led security hardening across the public endpoints and the staff portal: authentication and token checks, throttling keyed on the trusted client IP, staff permission checks and AWS WAF rules, plus a public frontend entry split from the staff portal and secret scanning in CI.', 'Made CI/CD faster and safer: optimized test execution and container caching, and queued backend deploys so they never overlap. Backend web workers recycle before they reach the pod memory limit.', 'Added PostgreSQL indexes concurrently on a production table with millions of rows, so deploys did not hold long write locks.'],
-          textExtra: 'A locked process-level cache replaced per-thread boto3 sessions and cut file-URL generation from about 240 ms to 1 ms per request.',
+          design: ['Led security hardening across the public endpoints and the staff portal: authentication and token checks, throttling keyed on the trusted client IP, staff permission checks and AWS WAF rules, plus a public frontend entry split from the staff portal and secret scanning in CI.', 'Cut backend CI/CD pipeline runs from 45 to 7 minutes: the test suite moved onto a local Postgres side-car, reuses a cached migrated schema and runs in parallel. Backend deploys queue so they never overlap, and web workers recycle before they reach the pod memory limit.', 'Added PostgreSQL indexes concurrently on a production table with millions of rows, so deploys did not hold long write locks.'],
+          textExtra: 'A locked process-level cache replaced per-thread boto3 sessions and cut file-URL generation from 240 ms to 1 ms per request.',
           tradeoffs: [
             'The cache is shared state for the whole process. A load balancer can silently drop idle sockets that the shared client still holds, so the cache has a reset that rebuilds it and retries on fresh connections.',
             'Only the default credential path (environment or IAM role) uses the shared cache. Configurations with a named profile keep per-thread sessions, so a profile change still takes effect.',
@@ -1428,13 +1428,13 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
         fleet: {
           title: ['Agent platform'], sub: 'memory · skills · routing · policy', tag: '▸ WATCH IT RUN',
           layers: ['Knowledge base', 'Cascading memory', 'Versioned skills', 'Router + crews', 'Policy gate'],
-          lede: 'The agent platform my engineering runs on. I built it on top of an open-source orchestrator, and most of its code is mine, starting with the knowledge base its agents read and write. Work moves from spec to isolated worktree to cross-model review, and nothing merges until I sign off.',
-          design: ['Cascading knowledge: global policy, runtime adapters, project rules and task notes each have one owner, and a shared knowledge base gives every agent the current decisions first.', 'Skills are versioned, script-backed workflows with a lifecycle contract, loaded only when their trigger matches. A capability plane lets agents discover tools on demand.', 'A risk-based router gives each task a model family and effort level, with per-lane budgets and tested routing policies.', 'One policy engine gates agent actions across three agent runtimes: reads pass, while production writes and credential exposure need approval.', 'Signal-triggered workflows: a Rust daemon keeps a durable event log, and merged pull requests, CI results and approval requests wake the right agent. Watchers spend no model tokens.', 'UI changes are verified end to end in a real browser, with screenshots as the acceptance evidence.', 'Workers do not push. Verified branches merge into one batch branch, and a reviewer from a different model family reads the diff and the test output, never the worker’s own summary.']
+          lede: 'The agent platform my engineering runs on, built around a knowledge base its agents read and write. Work moves from spec to isolated worktree to cross-model review, and nothing merges until I sign off.',
+          design: ['Cascading knowledge: global policy, runtime adapters, project rules and task notes each have one owner, and a shared knowledge base gives every agent the current decisions first.', 'Skills are versioned, script-backed workflows with a lifecycle contract, loaded only when their trigger matches. A capability plane lets agents discover tools on demand.', 'A risk-based router gives each task a model family and effort level, with per-lane budgets and tested routing policies.', 'One policy engine gates agent actions across three agent runtimes: reads pass, while production writes and credential exposure need approval.', 'Signal-triggered workflows: a Rust daemon keeps a durable event log, and merged pull requests, CI results and approval requests wake the right agent. Watchers spend no model tokens.', 'UI changes are verified end to end in a real browser, with screenshots as the acceptance evidence.', 'Workers do not push. Verified branches merge into one batch branch, and a reviewer from a different model family reads the diff and the test output, never the worker’s own summary.', 'Reuse first: the crew loop comes from an MIT-licensed open-source orchestrator; I built the knowledge base, skills, router, policy engine and event daemon on top of it.']
         },
         quant: {
           title: ['Quant research'], sub: 'momentum · earnings drift · value',
           layers: ['EDGAR · prices · estimates', 'Point-in-time store', 'Factor signals', 'Purged cross-validation', 'Leakage tests'],
-          lede: 'Personal research platform for testing equity factors on point-in-time data.',
+          lede: 'A research platform for testing equity factors on point-in-time data.',
           asOf: { title: 'FIG. 5 · POINT-IN-TIME CUT', note: 'synthetic quarters', cut: 'AS OF', period: 'quarter ends', known: 'report published', usable: 'known on the date: used', trap: 'quarter over, report not out: excluded', future: 'not known yet', drag: 'Move the cut' },
           design: ['Data pipelines for SEC EDGAR fundamentals, long-horizon prices and analyst estimates, each stored as it was known on its date.', 'Combinatorial purged cross-validation, a protocol frozen before each run, and synthetic tests for temporal leakage.']
         },
@@ -1457,9 +1457,9 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
       text: {
         pdf: 'Download PDF', partEv: 'Evidence', partDec: 'Decisions', partLim: 'Limits', partOpen: 'Open detail',
         profileH: 'Profile',
-        profile: 'Full-stack engineer in Amsterdam, strongest in backend and system design; I own backend and frontend production releases. I also build agentic systems: my engineering runs on an agent platform I built on top of an open-source orchestrator (most of its code is mine), with cascading memory, versioned skills, a risk-based router and a policy engine. AI is my search engine and research pipeline; agents brief me, and I decide what ships, behind tests and review. MSc Computer Science, University of Amsterdam & VU Amsterdam, thesis graded 9/10.',
+        profile: 'Full-stack engineer in Amsterdam, strongest in backend and system design; I own backend and frontend production releases. I also build agentic systems: my engineering runs on Hayabusa, an agent platform I built, with cascading memory, versioned skills, a risk-based router and a policy engine. MSc Computer Science, University of Amsterdam & VU Amsterdam, thesis graded 9/10.',
         expH: 'Experience',
-        exp: [['Full Stack Engineer', 'legal-tech company', 'Apr 2025 – present · Amsterdam', 'Release owner for the backend and the frontend. Beyond assigned tickets, I initiated and led the document AI pipeline (now in production), security hardening of the public endpoints and the staff portal, and CI/CD and infrastructure improvements. I also took retrieval, a real-time staff chat and automatic summaries to production.'], ['Backend Developer Intern', 'Zhejiang Topthinking Information Technology', 'Mar 2024 – Aug 2024 · Zhejiang, China']],
+        exp: [['Full Stack Engineer', 'legal-tech company', 'Apr 2025 – present · Amsterdam', 'Release owner for the backend and the frontend. Beyond assigned tickets, I initiated and led the document AI pipeline (now in production), security hardening of the public endpoints and the staff portal, and a CI/CD speed-up that cut backend pipeline runs from 45 to 7 minutes. I also took retrieval, a real-time staff chat and automatic summaries to production.'], ['Backend Developer Intern', 'Zhejiang Topthinking Information Technology', 'Mar 2024 – Aug 2024 · Zhejiang, China']],
         workH: 'Selected work',
         eduH: 'Education',
         edu: [
@@ -1470,7 +1470,7 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
         skills: [['Languages', 'Python, TypeScript, JavaScript, SQL, Java, Bash'], ['Backend and data', 'Django, Django REST Framework, Celery, Redis, PostgreSQL, pandas'], ['LLM engineering', 'RAG and embeddings, tool calling with JSON-schema tools, real-time chat over WebSockets, DB-managed prompts, offline evaluation on replayed data, prompt caching and usage tracking'], ['Agentic systems', 'Shared knowledge base, script-driven versioned skills, on-demand tool discovery, risk-based model routing, policy-gated agent actions, signal-triggered workflows, end-to-end browser verification, cross-model review'], ['Frontend', 'React, TypeScript, HTML, CSS'], ['Cloud and DevOps', 'Docker, Kubernetes, Rancher, AWS (RDS, ECR, S3), Bitbucket Pipelines'], ['Integrations', 'Auth0, Firebase, e-signing, accounting and billing, Sentry, LLM APIs'], ['Spoken', 'Chinese (native), English (full professional)']],
         offH: 'Off-duty',
         // one-page printed CV; the screen text view keeps the full detail
-        cv: {"projH": "Selected projects", "summary": "Full-stack engineer, strongest in backend and system design. I own backend and frontend production releases on a Django and React platform, take LLM features to production, and run my engineering on an agent platform I built on top of an open-source orchestrator, most of its code mine. AI is my search engine and research pipeline; I decide what ships.", "exp": [["Full Stack Engineer", "legal-tech company", "Apr 2025 – present · Amsterdam", ["Own backend and frontend production releases; ship features end to end across Django REST, Celery and React/TypeScript, from schema changes to Kubernetes deploys.", "Initiated, designed and built a document AI pipeline for scanned legal mail, now in production: a self-hosted vision model, deterministic splitting, human-approved templates, evidence-linked fields and a review queue.", "Took LLM features to production: retrieval over past cases with legal-domain embeddings, a real-time staff chat with JSON-schema tools, and automatic summaries, with prompt caching, usage tracking and rate limits.", "Cut file-URL generation from about 240 ms to 1 ms per request with a locked process-level client cache; built PostgreSQL indexes concurrently on a multi-million-row table without long write locks.", "Led security hardening across public endpoints and the staff portal (authentication, token checks, throttling, permission checks, AWS WAF rules, secret scanning in CI) and made CI/CD faster and safer."]], ["Backend Developer Intern", "Zhejiang Topthinking Information Technology", "Mar 2024 – Aug 2024 · Zhejiang, China", []]], "proj": [["Hayabusa agent platform", "2026", "Built on top of an open-source orchestrator, most of its code mine: a shared knowledge base, script-driven skills, signal-triggered workflows, end-to-end browser verification, risk-based model routing and a policy engine that gates agent actions."], ["EBEP energy study", "MSc thesis, 9/10", "Across 44 controlled runs on AWS and bare-metal Kubernetes, ephemeral preview environments used 60–67 % less energy than persistent ones, with no measured loss in service quality. Open-source harness: github.com/JialongMei/ebep-harness"], ["Quant research", "personal", "Equity-factor research on point-in-time data, with purged cross-validation and a protocol frozen before each run."]], "edu": [["MSc Computer Science", "University of Amsterdam & Vrije Universiteit Amsterdam", "Sep 2024 – Aug 2026", "Joined my current company in the final months of year one and went full-time soon after. Throughout year two I worked full-time and completed the degree in the standard two years. Thesis graded 9/10."], ["BSc Computer Science", "Vrije Universiteit Amsterdam", "Sep 2020 – Jul 2023"]], "skills": [["Backend", "Python, Django, Django REST Framework, Celery, Redis, PostgreSQL, SQL"], ["Frontend", "React, TypeScript, JavaScript, HTML, CSS"], ["LLM and agents", "RAG, embeddings, tool calling, WebSocket chat, prompt caching, multi-agent orchestration, agent policy and review"], ["Cloud and DevOps", "Docker, Kubernetes, Rancher, AWS (RDS, ECR, S3), Bitbucket Pipelines, Playwright"], ["Integrations", "Auth0, Firebase, e-signing, accounting and billing, Sentry"], ["Spoken", "Chinese (native), English (full professional)"]]}
+        cv: {"projH": "Selected projects", "summary": "Full-stack engineer, strongest in backend and system design. I own backend and frontend production releases on a Django and React platform, ship LLM features to production, and built the agent platform my engineering runs on.", "exp": [["Full Stack Engineer", "legal-tech company", "Apr 2025 – present · Amsterdam", ["Own backend and frontend production releases; ship features end to end across Django REST, Celery and React/TypeScript, from schema changes to Kubernetes deploys.", "Initiated, designed and built a document AI pipeline, now in production, that automates intake of scanned legal mail: a self-hosted vision model, deterministic splitting, human-approved templates, evidence-linked fields and a review queue for uncertain cases.", "Shipped LLM features to production: retrieval over past cases with legal-domain embeddings, a real-time staff chat with JSON-schema tools, and automatic summaries, with prompt caching, usage tracking and rate limits.", "Cut backend CI/CD pipeline runs from 45 to 7 minutes by moving the test suite onto a local Postgres side-car, caching the migrated test schema and running tests in parallel.", "Reduced file-URL generation latency by over 99 % (240 ms to 1 ms per request) with a locked process-level client cache; built PostgreSQL indexes concurrently on a multi-million-row table without long write locks.", "Led security hardening across public endpoints and the staff portal: authentication, token checks, throttling, permission checks, AWS WAF rules and secret scanning in CI."]], ["Backend Developer Intern", "Zhejiang Topthinking Information Technology", "Mar 2024 – Aug 2024 · Zhejiang, China", []]], "proj": [["Hayabusa agent platform", "2026", "The agent platform my engineering runs on: a shared knowledge base, script-driven skills, signal-triggered workflows, end-to-end browser verification, risk-based model routing and a policy engine that gates agent actions."], ["EBEP energy study", "MSc thesis, 9/10", "Across 44 controlled runs on AWS and bare-metal Kubernetes, ephemeral preview environments used 60–67 % less energy than persistent ones, with no measured loss in service quality. Open-source harness: github.com/JialongMei/ebep-harness"], ["Quant research", "2026", "Equity-factor research on point-in-time data, with purged cross-validation and a protocol frozen before each run."]], "edu": [["MSc Computer Science", "University of Amsterdam & Vrije Universiteit Amsterdam", "Sep 2024 – Aug 2026", "Thesis graded 9/10."], ["BSc Computer Science", "Vrije Universiteit Amsterdam", "Sep 2020 – Jul 2023"]], "skills": [["Backend", "Python, Django, Django REST Framework, Celery, Redis, PostgreSQL, SQL"], ["Frontend", "React, TypeScript, JavaScript, HTML, CSS"], ["LLM and agents", "RAG, embeddings, tool calling, WebSocket chat, prompt caching, multi-agent orchestration, agent policy and review"], ["Cloud and DevOps", "Docker, Kubernetes, Rancher, AWS (RDS, ECR, S3), Bitbucket Pipelines, Playwright"], ["Integrations", "Auth0, Firebase, e-signing, accounting and billing, Sentry"], ["Spoken", "Chinese (native), English (full professional)"]]}
       }
     },
     zh: {
@@ -1478,7 +1478,7 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
       role: '全栈工程师 · 后端与 Agentic AI',
       sheet: '点击项目查看详图 · 按住放大',
       sheetTall: '系统总览 · 点按项目查看详图',
-      lede: ['我把 AI 当调研流水线，新工具', '快速接入现有代码，经测试和评审上线。'],
+      lede: ['后端和前端的生产发布由我负责，', '日常工程跑在我构建的 agent 平台上。'],
       tb: { dwg: '图号', loc: '所在地', locVal: '荷兰 阿姆斯特丹', upd: '更新' },
       nums: [
         ['240 → 1 ms', '单次请求的文件 URL 生成耗时'],
@@ -1505,7 +1505,7 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
       th: { sheet: 'JM-002 · 编排', back: '← 架构图', note: '这是我工作方式的示意运行。工具和规则是真实的，任务是示例。', acts: [
         ['接单', '每个需求先做风险分级：T0 最小，T3 影响面最大。agent 先从本地知识库调取以往的决策；非简单的工作先出规格，验收标准写成 WHEN / THEN，然后才动代码。'],
         ['监督执行', 'Supervisor / Executor 模式：监督者把任务派给固定的执行者，阻塞等待它的生命周期事件，不做轮询。执行者跑偏时即时纠偏；上下文窗口开始退化之前，换上新的执行者。'],
-        ['编队', 'Hayabusa 是我在一个开源（MIT）编排器之上构建的 agent 平台（大部分代码是我的），由一个协调 agent 调度多 agent 编队。每个执行者有隔离的 git worktree，路由器按风险和工作负载类型分配模型，事件驱动的监听进程零 token 消耗，有事件才唤醒协调者。只有决策点才需要我介入。'],
+        ['编队', 'Hayabusa 是我构建的 agent 平台，由一个协调 agent 调度多 agent 编队。每个执行者有隔离的 git worktree，路由器按风险和工作负载类型分配模型，事件驱动的监听进程零 token 消耗，有事件才唤醒协调者。只有决策点才需要我介入。'],
         ['批量交付', '执行者只在本地验证，推送在 git hook 层被拦截。验证通过的分支集成进一个批次分支：测试跑一次，只开一个 PR，只有一处需要评审。'],
         ['夜间', '夜间无人值守执行。长周期任务把状态持久化到 STATUS 文件作为检查点，把有边界的子任务分派给子 agent，每个里程碑都要过独立评审关口。上下文到阈值就轮换，早上交付报告，合并始终卡在人工审批这一关。']
       ] },
@@ -1529,15 +1529,15 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
         cache: ['进程级缓存', 'session +', 'S3 resource', '加锁，只建一次'],
         footBefore: '每个请求、每个线程都要做', footAfter: '每个进程只做一次',
         revs: ['修订 A', '修订 B', 'A + B 叠图'], note: '3 个 client → 1 个共享',
-        aria: '改前：每个请求线程都新建 boto3 session 并加载 S3 服务模型，约 240 毫秒。改后：同一进程内所有线程共用一个 session 和 resource，加锁创建一次，约 1 毫秒。'
+        aria: '改前：每个请求线程都新建 boto3 session 并加载 S3 服务模型，240 毫秒。改后：同一进程内所有线程共用一个 session 和 resource，加锁创建一次，1 毫秒。'
       },
       nodes: {
         platform: {
           title: ['生产平台'], sub: 'Django · React · Kubernetes', tag: '改前 / 改后 ▸',
           lede: '一家法律科技公司的 Django + React 生产平台。从数据库结构改动到 Kubernetes 部署，功能我都能独立交付。',
           layers: ['S3 文件存储', 'PostgreSQL', 'Celery 后台任务', 'Django REST API', 'React 前端'],
-          design: ['主导公开接口与员工端的安全加固：认证与 token 校验、按可信客户端 IP 限流、员工权限校验和 AWS WAF 规则；前端公开入口与员工端代码分离，CI 中加入密钥扫描。', '让 CI/CD 更快也更稳：优化测试执行和容器缓存，后端部署排队执行、不再重叠。后端 Web worker 在触及 Pod 内存上限前自动回收。', '在一张数百万行的生产表上用 CONCURRENTLY 方式建 PostgreSQL 索引，部署时不会长时间锁住写入。'],
-          textExtra: '把按线程新建的 boto3 session 换成加锁的进程级缓存后，单次请求生成文件 URL 的耗时从约 240 毫秒降到 1 毫秒。',
+          design: ['主导公开接口与员工端的安全加固：认证与 token 校验、按可信客户端 IP 限流、员工权限校验和 AWS WAF 规则；前端公开入口与员工端代码分离，CI 中加入密钥扫描。', '把后端 CI/CD 流水线从 45 分钟缩短到 7 分钟：测试改用本地 Postgres side-car，复用缓存的已迁移库结构并行运行。后端部署排队执行、不再重叠，后端 Web worker 在触及 Pod 内存上限前自动回收。', '在一张数百万行的生产表上用 CONCURRENTLY 方式建 PostgreSQL 索引，部署时不会长时间锁住写入。'],
+          textExtra: '把按线程新建的 boto3 session 换成加锁的进程级缓存后，单次请求生成文件 URL 的耗时从 240 毫秒降到 1 毫秒。',
           tradeoffs: [
             '缓存是整个进程共享的状态。负载均衡器会悄悄断开空闲连接，而共享的 client 还拿着这些连接，所以缓存带有重置功能：重建后在新连接上重试。',
             '只有默认凭据路径（环境变量或 IAM 角色）使用共享缓存。指定了 profile 的配置仍按线程创建 session，这样修改 profile 才会生效。',
@@ -1566,13 +1566,13 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
         fleet: {
           title: ['Agent 平台'], sub: '记忆 · 技能 · 路由 · 策略', tag: '▸ 观看运行',
           layers: ['知识库', '分层记忆', '版本化技能', '路由与编队', '策略门控'],
-          lede: '我日常工程所依托的 agent 平台，在一个开源编排器之上由我构建，大部分代码是我的，核心是 agent 共同读写的知识库。工作从规格走到隔离的 worktree，再到跨模型评审，我签收之前什么都不会合并。',
-          design: ['分层知识：全局策略、运行时适配、项目规则和任务笔记各有唯一归属，共享知识库让每个 agent 先拿到当前有效的决策。', '技能是带版本、由脚本支撑的工作流，有完整的生命周期约定，只在触发条件匹配时加载。能力平面（capability plane）让 agent 按需发现工具。', '按风险路由：每个任务分配合适的模型系列和推理强度，各通道有预算，路由策略有测试覆盖。', '一个策略引擎统一管住三种 agent 运行时的操作：读操作放行，生产写入和凭据暴露必须审批。', '信号触发的工作流：Rust 守护进程保存持久化事件日志，PR 合并、CI 结果和审批请求会唤醒对应的 agent。监听进程不消耗模型 token。', 'UI 改动在真实浏览器里做端到端验证，以截图作为验收证据。', '执行者不推送代码。验证通过的分支合并进一个批次分支，再由另一系列的模型阅读 diff 和测试输出做评审，看不到执行者自己的总结。']
+          lede: '我日常工程所依托的 agent 平台，核心是 agent 共同读写的知识库。工作从规格走到隔离的 worktree，再到跨模型评审，我签收之前什么都不会合并。',
+          design: ['分层知识：全局策略、运行时适配、项目规则和任务笔记各有唯一归属，共享知识库让每个 agent 先拿到当前有效的决策。', '技能是带版本、由脚本支撑的工作流，有完整的生命周期约定，只在触发条件匹配时加载。能力平面（capability plane）让 agent 按需发现工具。', '按风险路由：每个任务分配合适的模型系列和推理强度，各通道有预算，路由策略有测试覆盖。', '一个策略引擎统一管住三种 agent 运行时的操作：读操作放行，生产写入和凭据暴露必须审批。', '信号触发的工作流：Rust 守护进程保存持久化事件日志，PR 合并、CI 结果和审批请求会唤醒对应的 agent。监听进程不消耗模型 token。', 'UI 改动在真实浏览器里做端到端验证，以截图作为验收证据。', '执行者不推送代码。验证通过的分支合并进一个批次分支，再由另一系列的模型阅读 diff 和测试输出做评审，看不到执行者自己的总结。', '复用优先：编队调度循环来自一个 MIT 协议的开源编排器，知识库、技能体系、路由、策略引擎和事件守护进程由我在其上构建。']
         },
         quant: {
           title: ['量化研究'], sub: '动量 · 盈利漂移 · 价值',
           layers: ['EDGAR · 价格 · 预期', 'point-in-time 存储', '因子信号', 'purged 交叉验证', '泄漏测试'],
-          lede: '个人研究平台，用 point-in-time 数据检验股票因子。',
+          lede: '用 point-in-time 数据检验股票因子的研究平台。',
           asOf: { title: '图 5 · 时点剖切', note: '合成的季度数据', cut: '截至', period: '季度结束', known: '报告发布', usable: '当日已知：使用', trap: '季度已结束、报告未发布：排除', future: '尚未可知', drag: '移动剖切面' },
           design: ['SEC EDGAR 基本面、长周期价格和分析师预期的数据管道，每条数据都按当时已知的版本保存。', '组合式 purged 交叉验证、每次实验前冻结的协议，以及检查时间泄漏的合成测试。']
         },
@@ -1595,9 +1595,9 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
       text: {
         pdf: '下载 PDF', partEv: '证据', partDec: '设计决策', partLim: '局限', partOpen: '打开详图',
         profileH: '简介',
-        profile: '在阿姆斯特丹做全栈开发，强项是后端和系统设计，后端和前端的生产发布由我全权负责。我也构建 agentic 系统：我日常工程所依托的 agent 平台在一个开源编排器之上由我构建（大部分代码是我的），包含分层记忆、版本化技能、按风险的模型路由和策略引擎。AI 是我的搜索引擎和调研流水线：agent 给我出简报，由我决定什么上线，经测试和评审把关。阿姆斯特丹大学与阿姆斯特丹自由大学计算机科学硕士，论文 9/10。',
+        profile: '在阿姆斯特丹做全栈开发，强项是后端和系统设计，后端和前端的生产发布由我全权负责。我也构建 agentic 系统：我日常工程所依托的 agent 平台 Hayabusa 由我构建，包含分层记忆、版本化技能、按风险的模型路由和策略引擎。阿姆斯特丹大学与阿姆斯特丹自由大学计算机科学硕士，论文 9/10。',
         expH: '工作经历',
-        exp: [['全栈工程师', '法律科技公司', '2025 年 4 月至今 · 阿姆斯特丹', '后端和前端的生产发布由我全权负责。工单之外，我主动发起并主导了文档 AI 流水线（已上线）、公开接口与员工端的安全加固，以及 CI/CD 与基础设施优化。我还把检索问答、实时员工端对话和自动摘要做到了生产上线。'], ['后端开发实习生', '浙江 Topthinking 信息技术有限公司', '2024 年 3 月 – 2024 年 8 月 · 中国浙江']],
+        exp: [['全栈工程师', '法律科技公司', '2025 年 4 月至今 · 阿姆斯特丹', '后端和前端的生产发布由我全权负责。工单之外，我主动发起并主导了文档 AI 流水线（已上线）、公开接口与员工端的安全加固，以及把后端 CI/CD 流水线从 45 分钟缩短到 7 分钟的提速工作。我还把检索问答、实时员工端对话和自动摘要做到了生产上线。'], ['后端开发实习生', '浙江 Topthinking 信息技术有限公司', '2024 年 3 月 – 2024 年 8 月 · 中国浙江']],
         workH: '项目',
         eduH: '教育',
         edu: [
@@ -1607,7 +1607,7 @@ html:lang(zh) .thm-cap p, html:lang(zh) .thm-full { font-style: normal; }
         skillsH: '技能',
         skills: [['编程语言', 'Python、TypeScript、JavaScript、SQL、Java、Bash'], ['后端与数据', 'Django、Django REST Framework、Celery、Redis、PostgreSQL、pandas'], ['LLM 工程', 'RAG 与 embeddings、基于 JSON schema 的工具调用、基于 WebSocket 的实时对话、数据库管理 prompt、用历史数据离线评估、prompt caching 与用量统计'], ['Agentic 系统', '共享知识库、脚本驱动的版本化技能、按需工具发现、按风险路由模型、策略门控的 agent 操作、信号触发的工作流、端到端浏览器验证、跨模型评审'], ['前端', 'React、TypeScript、HTML、CSS'], ['云与运维', 'Docker、Kubernetes、Rancher、AWS（RDS、ECR、S3）、Bitbucket Pipelines'], ['系统集成', 'Auth0、Firebase、电子签名、财务与计费、Sentry、多家 LLM API'], ['语言', '中文（母语）、英语（专业工作水平）']],
         offH: '工作之外',
-        cv: {"projH": "项目", "summary": "全栈工程师，强项是后端和系统设计。在 Django + React 生产平台上全权负责后端和前端的生产发布，把 LLM 功能做到生产上线；日常工程运行在我在一个开源编排器之上构建的 agent 平台上，大部分代码是我的。AI 是我的搜索引擎和调研流水线，由我决定什么上线。", "exp": [["全栈工程师", "法律科技公司", "2025 年 4 月至今 · 阿姆斯特丹", ["全权负责后端和前端的生产发布；功能从数据库结构改动到 Kubernetes 部署端到端交付，覆盖 Django REST、Celery 和 React/TypeScript。", "主动发起、设计并实现了处理法律信件扫描件的文档 AI 流水线，现已上线：自托管视觉模型、确定性拆分、人工批准的模板、带页面证据的字段和审核队列。", "把 LLM 功能做到生产上线：用法律领域 embeddings 检索历史案件、基于 JSON schema 工具的实时员工端对话、自动摘要，并用 prompt caching、用量统计和限流控制成本。", "用加锁的进程级 client 缓存，把单次请求生成文件 URL 的耗时从约 240 毫秒降到 1 毫秒；在数百万行的 PostgreSQL 表上并发建索引，部署时不长时间锁写。", "主导公开接口与员工端的安全加固（认证、token 校验、限流、权限校验、AWS WAF 规则、CI 密钥扫描），并让 CI/CD 更快更稳。"]], ["后端开发实习生", "浙江 Topthinking 信息技术有限公司", "2024 年 3 月 – 2024 年 8 月 · 中国浙江", []]], "proj": [["Hayabusa agent 平台", "2026", "在一个开源编排器之上构建，大部分代码是我的：共享知识库、脚本驱动的技能、信号触发的工作流、端到端浏览器验证、按风险路由模型，以及管控 agent 操作的策略引擎。"], ["EBEP 能耗研究", "硕士论文 9/10", "在 AWS 和裸机 Kubernetes 上做了 44 次受控实验：临时预览环境比常驻环境节能 60–67%，未测到服务质量下降。开源实验框架：github.com/JialongMei/ebep-harness"], ["量化研究", "个人项目", "基于 point-in-time 数据的股票因子研究，使用 purged 交叉验证，每次运行前冻结实验协议。"]], "edu": [["计算机科学硕士", "阿姆斯特丹大学与阿姆斯特丹自由大学联合培养", "2024 年 9 月 – 2026 年 8 月", "第一年最后几个月加入现在的公司，不久后转为全职。第二年全程全职，同时按两年标准学制完成学位。论文 9/10。"], ["计算机科学学士", "阿姆斯特丹自由大学", "2020 年 9 月 – 2023 年 7 月"]], "skills": [["后端", "Python、Django、Django REST Framework、Celery、Redis、PostgreSQL、SQL"], ["前端", "React、TypeScript、JavaScript、HTML、CSS"], ["LLM 与 agent", "RAG、embeddings、工具调用、WebSocket 实时对话、prompt caching、多 agent 编排、agent 策略与评审"], ["云与运维", "Docker、Kubernetes、Rancher、AWS（RDS、ECR、S3）、Bitbucket Pipelines、Playwright"], ["系统集成", "Auth0、Firebase、电子签名、财务与计费、Sentry"], ["语言", "中文（母语）、英语（专业工作水平）"]]}
+        cv: {"projH": "项目", "summary": "全栈工程师，强项是后端和系统设计。在 Django + React 生产平台上全权负责后端和前端的生产发布，把 LLM 功能做到生产上线，并构建了日常工程所依托的 agent 平台 Hayabusa。", "exp": [["全栈工程师", "法律科技公司", "2025 年 4 月至今 · 阿姆斯特丹", ["全权负责后端和前端的生产发布；功能从数据库结构改动到 Kubernetes 部署端到端交付，覆盖 Django REST、Celery 和 React/TypeScript。", "主动发起、设计并实现了文档 AI 流水线，自动处理扫描的法律信件，现已上线：自托管视觉模型、确定性拆分、人工批准的模板、带页面证据的字段，不确定的件进入审核队列。", "把 LLM 功能做到生产上线：用法律领域 embeddings 检索历史案件、基于 JSON schema 工具的实时员工端对话、自动摘要，并用 prompt caching、用量统计和限流控制成本。", "把后端 CI/CD 流水线从 45 分钟缩短到 7 分钟：测试改用本地 Postgres side-car，复用缓存的库结构，并行执行。", "用加锁的进程级 client 缓存，把单次请求生成文件 URL 的耗时从 240 毫秒降到 1 毫秒（降幅超 99%）；在数百万行的 PostgreSQL 表上并发建索引，部署时不长时间锁写。", "主导公开接口与员工端的安全加固：认证、token 校验、限流、权限校验、AWS WAF 规则、CI 密钥扫描。"]], ["后端开发实习生", "浙江 Topthinking 信息技术有限公司", "2024 年 3 月 – 2024 年 8 月 · 中国浙江", []]], "proj": [["Hayabusa agent 平台", "2026", "我日常工程所依托的 agent 平台：共享知识库、脚本驱动的技能、信号触发的工作流、端到端浏览器验证、按风险路由模型，以及管控 agent 操作的策略引擎。"], ["EBEP 能耗研究", "硕士论文 9/10", "在 AWS 和裸机 Kubernetes 上做了 44 次受控实验：临时预览环境比常驻环境节能 60–67%，未测到服务质量下降。开源实验框架：github.com/JialongMei/ebep-harness"], ["量化研究", "2026", "基于 point-in-time 数据的股票因子研究，使用 purged 交叉验证，每次运行前冻结实验协议。"]], "edu": [["计算机科学硕士", "阿姆斯特丹大学与阿姆斯特丹自由大学联合培养", "2024 年 9 月 – 2026 年 8 月", "论文 9/10。"], ["计算机科学学士", "阿姆斯特丹自由大学", "2020 年 9 月 – 2023 年 7 月"]], "skills": [["后端", "Python、Django、Django REST Framework、Celery、Redis、PostgreSQL、SQL"], ["前端", "React、TypeScript、JavaScript、HTML、CSS"], ["LLM 与 agent", "RAG、embeddings、工具调用、WebSocket 实时对话、prompt caching、多 agent 编排、agent 策略与评审"], ["云与运维", "Docker、Kubernetes、Rancher、AWS（RDS、ECR、S3）、Bitbucket Pipelines、Playwright"], ["系统集成", "Auth0、Firebase、电子签名、财务与计费、Sentry"], ["语言", "中文（母语）、英语（专业工作水平）"]]}
       }
     }
   };
